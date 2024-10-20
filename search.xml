@@ -4,6 +4,44 @@
   
     
     <entry>
+      <title>PyTorch 踩坑记录</title>
+      <link href="/2024/10/20/Pytorch%20%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/"/>
+      <url>/2024/10/20/Pytorch%20%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/</url>
+      
+        <content type="html"><![CDATA[<h1>Pytorch 踩坑记录</h1><h2 id="pycharm">pycharm</h2><h3 id="1-远程调试时，调试文件使用的是C盘JetBrains文件夹下的映射文件，而不是实际项目文件">1. 远程调试时，调试文件使用的是C盘JetBrains文件夹下的映射文件，而不是实际项目文件</h3><p>在调试时，会跳到断点位置，但是是C盘映射部分的对应文件，而不是pycharm中实际的打断点的文件</p><p>解决方案：在运行/调试设置中，增加路径映射：</p><img src="/2024/10/20/Pytorch%20%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/image-20241014144606967.png" class="" title="image-20241014144606967"><h3 id="2-远程调试设置文件路径出现FileNotFoundError-Errno-2-No-such-file-or-directory，找不到文件">2. 远程调试设置文件路径出现FileNotFoundError: [Errno 2] No such file or directory，找不到文件</h3><p>在经过1的路径映射设置和远程服务器正确配置后如果仍出现该问题，一般是工作目录设置成了子目录或者一些奇怪的地方，把工作目录改成项目目录即可，如下</p><img src="/2024/10/20/Pytorch%20%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/image-20241014144727017.png" class="" title="image-20241014144727017"><ul><li>这里原来是…/detrex/tools，默认设置成子目录了，导致相对路径错误</li></ul><h2 id="pytorch">pytorch</h2><h3 id="1-4090最低可以用cuda11-0">1. 4090最低可以用cuda11.0</h3><h3 id="2-pip-install-e-报错：OSError">2. pip install -e ./ 报错：OSError</h3><p>完整报错如下：</p><p>![image-20241016144522371](Pytorch 踩坑记录/image-20241016144522371.png)![image-20241016144539350](Pytorch 踩坑记录/image-20241016144539350-17290611398871.png)</p><p>主要是两个错误：</p><ol><li>OSError: /root/miniconda3/envs/cdfsod/lib/python3.9/site-packages/torch/lib/…/…/nvidia/cublas/lib/libcublas.so.11: symbol cublasLtGetStatusString version libcublasLt.so.11 not defined in file libcublasLt.so.11 with link time reference</li><li>OSError: /root/miniconda3/envs/cdfsod/lib/python3.9/site-packages/nvidia/cublas/lib/libcublas.so.11: symbol cublasLtGetStatusString version libcublasLt.so.11 not defined in file libcublasLt.so.11 with link time reference</li></ol><p>这俩本质一样</p><p>解决方案：增加一个临时变量</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/root/miniconda3/envs/cdfsod/lib/python3.9/site-packages/nvidia/cublas/lib/:<span class="variable">$LD_LIBRARY_PATH</span></span><br></pre></td></tr></table></figure><ul><li>这里的路径参考上面报错的路径，对应一下即可</li></ul><h3 id="3-RuntimeError-weight-tensor-should-be-defined-either-for-all-or-no-classes">3.RuntimeError: weight tensor should be defined either for all or no classes</h3>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Pytorch </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>深度学习服务器常用Linux命令小结</title>
+      <link href="/2024/10/20/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%B8%B8%E7%94%A8Linux%E5%91%BD%E4%BB%A4%E5%B0%8F%E7%BB%93/"/>
+      <url>/2024/10/20/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%B8%B8%E7%94%A8Linux%E5%91%BD%E4%BB%A4%E5%B0%8F%E7%BB%93/</url>
+      
+        <content type="html"><![CDATA[<h1>深度学习服务器常用Linux命令小结</h1><h2 id="说明">说明</h2><p>本博客记录了在利用Xshell，Xftp等访问服务器时用到的一些常用命令，持续更新中。</p><h2 id="更改文件夹访问权限">更改文件夹访问权限</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> 777 /path</span><br></pre></td></tr></table></figure><h2 id="pip配置清华源">pip配置清华源</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip config <span class="built_in">set</span> global.index-url https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple</span><br></pre></td></tr></table></figure><h2 id="删除conda环境">删除conda环境</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda remove --name your_env_name --all</span><br></pre></td></tr></table></figure><h2 id="解压tar-gz文件">解压tar.gz文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xzvf file.tar.gz</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> DL服务器命令 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>PyTorch Tensor 操作全面教程</title>
       <link href="/2024/10/14/PyTorch%20Tensor%20%E5%9F%BA%E7%A1%80%E6%95%99%E7%A8%8B/"/>
       <url>/2024/10/14/PyTorch%20Tensor%20%E5%9F%BA%E7%A1%80%E6%95%99%E7%A8%8B/</url>
@@ -42,25 +80,6 @@
     
     
     <entry>
-      <title>洛谷手记</title>
-      <link href="/2024/10/07/%E6%B4%9B%E8%B0%B7%E6%89%8B%E8%AE%B0/"/>
-      <url>/2024/10/07/%E6%B4%9B%E8%B0%B7%E6%89%8B%E8%AE%B0/</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> DS </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>RevisitingML_从数学角度重游机器学习</title>
       <link href="/2024/10/07/Revisiting_ML/"/>
       <url>/2024/10/07/Revisiting_ML/</url>
@@ -83,9 +102,9 @@
     
     
     <entry>
-      <title>关于</title>
-      <link href="/about/index.html"/>
-      <url>/about/index.html</url>
+      <title>分类</title>
+      <link href="/categories/index.html"/>
+      <url>/categories/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -105,9 +124,9 @@
     
     
     <entry>
-      <title>分类</title>
-      <link href="/categories/index.html"/>
-      <url>/categories/index.html</url>
+      <title>音乐</title>
+      <link href="/music/index.html"/>
+      <url>/music/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -116,9 +135,9 @@
     
     
     <entry>
-      <title>音乐</title>
-      <link href="/music/index.html"/>
-      <url>/music/index.html</url>
+      <title>关于</title>
+      <link href="/about/index.html"/>
+      <url>/about/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
