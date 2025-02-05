@@ -1,0 +1,1254 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>C++高级程序设计笔记（C6） | ChocStar🍫</title><meta name="author" content="Liu Kai-Qi"><meta name="copyright" content="Liu Kai-Qi"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="C6 运行时环境 示例  该PPT列出了几种常见的 函数调用约定，每一种调用约定决定了函数的参数传递方式、调用者与被调用者之间如何管理堆栈、以及如何清理参数等。  __cdecl（C declaration）    特点：  参数从右向左压栈。 调用者负责清理堆栈。 支持可变参数（如 printf、scanf 等）。    典型使用场景：  是C语言的默认调用约定，常用于编写跨平台代码，特别是在">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++高级程序设计笔记（C6）">
+<meta property="og:url" content="http://example.com/2025/01/25/C6/index.html">
+<meta property="og:site_name" content="ChocStar🍫">
+<meta property="og:description" content="C6 运行时环境 示例  该PPT列出了几种常见的 函数调用约定，每一种调用约定决定了函数的参数传递方式、调用者与被调用者之间如何管理堆栈、以及如何清理参数等。  __cdecl（C declaration）    特点：  参数从右向左压栈。 调用者负责清理堆栈。 支持可变参数（如 printf、scanf 等）。    典型使用场景：  是C语言的默认调用约定，常用于编写跨平台代码，特别是在">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/C++.jpg">
+<meta property="article:published_time" content="2025-01-25T14:10:32.000Z">
+<meta property="article:modified_time" content="2025-02-05T09:29:42.263Z">
+<meta property="article:author" content="Liu Kai-Qi">
+<meta property="article:tag" content="C++高级程序设计">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/C++.jpg"><link rel="shortcut icon" href="/img/web_label.png"><link rel="canonical" href="http://example.com/2025/01/25/C6/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        if (name && globalFn[key][name]) return
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":150,"languages":{"author":"作者: Liu Kai-Qi","link":"链接: ","source":"来源: ChocStar🍫","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"top-right"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'C++高级程序设计笔记（C6）',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-02-05 17:29:42'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/background.png);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post type-C++高级程序设计" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/C++.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">ChocStar🍫</span></a><a class="nav-page-title" href="/"><span class="site-name">C++高级程序设计笔记（C6）</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">C++高级程序设计笔记（C6）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-01-25T14:10:32.000Z" title="发表于 2025-01-25 22:10:32">2025-01-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-02-05T09:29:42.263Z" title="更新于 2025-02-05 17:29:42">2025-02-05</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/C-%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/">C++高级程序设计</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">12.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>39分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1>C6</h1>
+<h2 id="运行时环境">运行时环境</h2>
+<h3 id="示例">示例</h3>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C6/image-20241025183945501.png" class="" title="image-20241025183945501">
+<p>该PPT列出了几种常见的 <strong>函数调用约定</strong>，每一种调用约定决定了函数的参数传递方式、调用者与被调用者之间如何管理堆栈、以及如何清理参数等。</p>
+<ol>
+<li><strong><code>__cdecl</code>（C declaration）</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>特点</strong>：</p>
+<ul>
+<li>参数从右向左压栈。</li>
+<li>调用者负责清理堆栈。</li>
+<li>支持可变参数（如 <code>printf</code>、<code>scanf</code> 等）。</li>
+</ul>
+</li>
+<li>
+<p><strong>典型使用场景</strong>：</p>
+<ul>
+<li>是C语言的默认调用约定，常用于编写跨平台代码，特别是在 Windows 和 Linux 环境下。</li>
+</ul>
+</li>
+<li>
+<p><strong>堆栈清理方式</strong>：</p>
+<ul>
+<li>调用函数后，调用者通过调整 <code>esp</code> 寄存器来清理堆栈上的参数。</li>
+</ul>
+</li>
+<li>
+<p><strong>例子</strong>：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __cdecl <span class="title function_">func</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span>;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ol start="2">
+<li><strong><code>__stdcall</code>（Standard Call）</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>特点</strong>：</p>
+<ul>
+<li>参数从右向左压栈。</li>
+<li>被调用者负责清理堆栈。</li>
+<li>不支持可变参数。</li>
+</ul>
+</li>
+<li>
+<p><strong>典型使用场景</strong>：</p>
+<ul>
+<li><code>__stdcall</code> 是 Windows API 中大多数函数的默认调用约定。</li>
+<li>在 Windows 操作系统中调用 <code>Win32</code> API 函数时经常使用这种调用方式。</li>
+</ul>
+</li>
+<li>
+<p><strong>堆栈清理方式</strong>：</p>
+<ul>
+<li>被调用函数负责清理堆栈参数，调用者无需再做额外的清理操作。</li>
+</ul>
+</li>
+<li>
+<p><strong>例子</strong>：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __stdcall <span class="title function_">func</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span>;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ol start="3">
+<li><strong><code>__fastcall</code>（Fast Call）</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>特点</strong>：</p>
+<ul>
+<li>部分参数通过寄存器传递，而不是通过堆栈（通常是 <code>ecx</code> 和 <code>edx</code> 寄存器先用于传递前两个参数，剩余参数则依然从右向左压栈）。</li>
+<li>被调用者负责清理堆栈。</li>
+<li>不支持可变参数。</li>
+</ul>
+</li>
+<li>
+<p><strong>典型使用场景</strong>：</p>
+<ul>
+<li><code>__fastcall</code> 主要用于提升函数调用的效率，尤其是在调用频繁或开销较大的函数时减少堆栈操作的负担。</li>
+</ul>
+</li>
+<li>
+<p><strong>堆栈清理方式</strong>：</p>
+<ul>
+<li>被调用函数负责清理堆栈。</li>
+</ul>
+</li>
+<li>
+<p><strong>例子</strong>：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __fastcall <span class="title function_">func</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span>;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ol start="4">
+<li><strong><code>__thiscall</code>（This Call）</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>特点</strong>：</p>
+<ul>
+<li>特别用于 C++ 类成员函数的调用。</li>
+<li><code>this</code> 指针通过 <code>ecx</code> 寄存器传递。</li>
+<li>其他参数从右向左压栈。</li>
+<li>被调用者负责清理堆栈。</li>
+</ul>
+</li>
+<li>
+<p><strong>典型使用场景</strong>：</p>
+<ul>
+<li>仅在 C++ 的类成员函数调用中使用，主要处理 <code>this</code> 指针。</li>
+</ul>
+</li>
+<li>
+<p><strong>堆栈清理方式</strong>：</p>
+<ul>
+<li>被调用函数负责清理堆栈。</li>
+</ul>
+</li>
+<li>
+<p><strong>例子</strong>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyClass</span> &#123;</span><br><span class="line">    <span class="function"><span class="type">void</span> __thiscall <span class="title">func</span><span class="params">(<span class="type">int</span> a)</span></span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>总结：</p>
+<p>这几种函数调用约定决定了函数如何传递参数和谁来管理堆栈资源，适用于不同的应用场景。<code>__cdecl</code> 适用于需要支持可变参数的函数，<code>__stdcall</code> 是Windows API的默认调用方式，<code>__fastcall</code> 通过寄存器传递参数以提高效率，而 <code>__thiscall</code> 则是专门为 C++ 的成员函数设计的调用约定。在实际使用中，编译器根据调用约定生成相应的函数调用和堆栈管理代码。</p>
+<h2 id="stdcall">stdcall</h2>
+<h3 id="示例-2">示例</h3>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C6/image-20241025190606713.png" class="" title="image-20241025190606713">
+<ol>
+<li><strong><code>main</code> 函数调用栈及汇编代码</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>第1行 (<code>sub $0x8, esp</code>)</strong>: 减少 <code>esp</code> 寄存器，预留8字节的空间给局部变量。</p>
+<ul>
+<li>栈布局：栈顶减少 8 个字节，为局部变量 <code>r</code> 等分配空间。</li>
+</ul>
+</li>
+<li>
+<p><strong>第2行 (<code>push $0x2</code>)</strong>: 将值 <code>2</code> 压入栈中，作为参数传递给 <code>func</code>。</p>
+<ul>
+<li>栈布局：参数 <code>2</code> 压入栈中。</li>
+</ul>
+</li>
+<li>
+<p><strong>第3行 (<code>push $0x1</code>)</strong>: 将值 <code>1</code> 压入栈中，作为第二个参数传递给 <code>func</code>。</p>
+<ul>
+<li>栈布局：参数 <code>1</code> 压入栈中。</li>
+</ul>
+</li>
+<li>
+<p>==这里从右往左入栈==</p>
+</li>
+<li>
+<p><strong>第4行 (<code>call _Z4funcii</code>)</strong>: 调用 <code>func</code> 函数，这个指令相当于两个操作：</p>
+<ul>
+<li>首先，<code>push eip</code>，将返回地址（即 <code>call</code> 之后的指令地址）压入栈中。</li>
+<li>然后 <code>jmp</code> 跳转到 <code>func</code> 的入口。</li>
+</ul>
+</li>
+<li>
+<p><strong>第5行 (<code>add $0x8, esp</code>)</strong>: 恢复栈指针，将传递给 <code>func</code> 的参数弹出栈。</p>
+<ul>
+<li>栈布局：释放 8 字节栈空间，恢复栈顶。</li>
+</ul>
+</li>
+<li>
+<p><strong>第6行 (<code>mov eax, -0xc(ebp)</code>)</strong>: 将<code>eax</code> 的值存储到 <code>r</code> 中。</p>
+</li>
+</ul>
+<ol start="2">
+<li><code>func</code> <strong>函数的栈及汇编代码</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>第12行 (<code>push ebp</code>)</strong>: 将当前的 <code>ebp</code> 压入栈中，以保存上一层调用栈的基地址。</p>
+<ul>
+<li>栈布局：<code>ebp</code> 被压入栈，当前函数可以使用它恢复调用者的上下文。</li>
+</ul>
+</li>
+<li>
+<p><strong>第13行 (<code>mov esp, ebp</code>)</strong>: 将 <code>esp</code> 的值赋给 <code>ebp</code>，以便 <code>ebp</code> 指向当前栈帧的起始位置。</p>
+</li>
+<li>
+<p><strong>第14行 (<code>sub $0x10, esp</code>)</strong>: 为 <code>func</code> 的局部变量预留栈空间。</p>
+</li>
+<li>
+<p><strong>第15行 (<code>mov 0x8(ebp), edx</code>)</strong>: 从 <code>ebp+8</code> 偏移量获取第一个参数 <code>a</code> 的值，并存入 <code>edx</code>。</p>
+</li>
+<li>
+<p><strong>第16行 (<code>mov 0xc(ebp), eax</code>)</strong>: 从 <code>ebp+12</code> 偏移量获取第二个参数 <code>b</code> 的值，并存入 <code>eax</code>。</p>
+</li>
+<li>
+<p><strong>第17行 (<code>add edx, eax</code>)</strong>: 将两个参数相加，结果存储在 <code>eax</code> 中。</p>
+</li>
+<li>
+<p><strong>第18行 (<code>mov eax, -0x4(ebp)</code>)</strong>: 将相加结果存储到 <code>func</code> 栈帧的 <code>r</code> 变量中。</p>
+</li>
+<li>
+<p><strong>第19行 (<code>mov -0x4(ebp), eax</code>)</strong>: 将 <code>r</code> 的值再次加载到 <code>eax</code> 中，准备返回。</p>
+</li>
+<li>
+<p><strong>第20行 (<code>leave</code>)</strong>: 恢复调用者的栈帧，执行 <code>mov esp, ebp</code> 和 <code>pop ebp</code>，恢复栈和基址。</p>
+</li>
+<li>
+<p><strong>第21行 (<code>ret</code>)</strong>: 从栈中弹出返回地址并跳转到调用点。</p>
+</li>
+</ul>
+<ol start="3">
+<li><strong>栈的布局</strong></li>
+</ol>
+<p>右侧的栈图展示了 <code>main</code> 和 <code>func</code> 函数在调用时栈的变化：</p>
+<ul>
+<li>在调用 <code>func</code> 之前，<code>main</code> 函数的局部变量 <code>r</code>、传递给 <code>func</code> 的参数 <code>1</code> 和 <code>2</code> 依次被压入栈中。</li>
+<li>调用 <code>func</code> 之后，返回地址 <code>ret_addr</code> 和 <code>ebp_main</code>（用于保存调用者 <code>main</code> 的栈帧基址）被压入栈中。</li>
+<li><code>func</code> 函数执行完毕后，返回值 <code>r=3</code> 被存储在栈帧中，并将其值返回给 <code>main</code>。</li>
+</ul>
+<ol start="4">
+<li><strong>关于 <code>stdcall</code> 调用约定</strong></li>
+</ol>
+<p>此PPT中的 <code>__attribute__((stdcall))</code> 强调了使用 <code>stdcall</code> 调用约定，它的特点是：</p>
+<ul>
+<li>
+<p>函数参数从右向左压栈。</p>
+</li>
+<li>
+<p>被调用者（即 <code>func</code>）负责清理参数，这也是 <code>ret $0x8</code> 的作用，清理 8 字节参数。</p>
+</li>
+<li>
+<p><code>ret $0x8</code> 的作用是：</p>
+<ul>
+<li><strong>从栈中弹出返回地址</strong>：通常的 <code>ret</code> 指令会从栈中弹出返回地址并跳转到该地址，这是函数返回的标准操作。</li>
+<li><strong>清理参数</strong>：<code>ret $0x8</code> 的 <code>$0x8</code> 表示在返回前<strong>清理栈中的 8 个字节，也就是说调用该函数时，函数传递的参数占用了栈中的 8 个字节</strong>。在返回之前，<code>ret $0x8</code> 会将栈指针 <code>esp</code> 增加 8（移除这 8 个字节的参数），然后再将控制权交还给调用者。</li>
+</ul>
+</li>
+</ul>
+<h2 id="可变参数">可变参数</h2>
+<h3 id="示例-3">示例</h3>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C6/image-20241025192028716.png" class="" title="image-20241025192028716">
+<p>这张PPT展示了C++中的可变参数函数（variadic functions），即函数可以接收可变数量的参数，常用于实现类似<code>printf</code>这样的函数。</p>
+<p><strong>上半部分（宏定义和内部实现）</strong></p>
+<ul>
+<li>
+<p><strong><code>typedef char *va_list;</code></strong>: 定义了<code>va_list</code>类型，表示可变参数列表的指针，用于访问函数中的可变参数。</p>
+</li>
+<li>
+<p><strong><code>#define _INTSIZEOF(x)</code></strong>: 这个宏计算一个类型的大小，并将其调整为<code>sizeof(int)</code>的倍数。通过这个宏确保了参数的对齐，特别是在处理参数大小不同的数据类型时非常重要。</p>
+<ul>
+<li>公式 <code>(sizeof(x) + sizeof(int) - 1) &amp; ~(sizeof(int) - 1)</code> 的作用是：
+<ul>
+<li>先加上<code>sizeof(int) - 1</code>确保<code>sizeof(x)</code>向上取整为<code>sizeof(int)</code>的倍数；</li>
+<li>通过与操作符按位取整，确保计算出的结果是<code>sizeof(int)</code>的倍数。</li>
+</ul>
+</li>
+<li>具体来说，即先用+sizeof(int)-1模拟向上取整（作二进制考虑，sizeof(int)-1即为11，最大即3，二进制11，和为110），而后与111111100进行&amp;操作，即把最后两位清空为0，即为对应的向上取整后<strong>4的倍数</strong></li>
+</ul>
+</li>
+<li>
+<p><code>#define va_start(ap, v) (ap = (va_list)&amp;v + _INTSIZEOF(v))</code></p>
+<p>这个宏用于初始化 <code>va_list</code> 类型的变量 <code>ap</code>，使其指向第一个可变参数的地址。</p>
+<ul>
+<li><code>ap</code>：是函数中的 <code>va_list</code> 类型变量，表示当前参数列表的指针。</li>
+<li><code>v</code>：是可变参数列表之前的最后一个已知参数。</li>
+<li><code>(va_list)&amp;v</code>：取变量 <code>v</code> 的地址，然后将其强制转换为 <code>va_list</code> 类型。由于 <code>va_list</code> 是指针类型，所以它指向 <code>v</code> 的内存地址。</li>
+<li><code>_INTSIZEOF(v)</code>：计算 <code>v</code> 的对齐大小，即它在栈中的占用空间。</li>
+<li><code>ap = (va_list)&amp;v + _INTSIZEOF(v)</code>：将 <code>ap</code> 设置为 <code>v</code> 的地址加上 <code>v</code> 所占用的对齐大小。这样 <code>ap</code> 就指向第一个可变参数的地址了。</li>
+</ul>
+</li>
+<li>
+<p><code>#define va_arg(ap, t) (*(t *)((ap += _INTSIZEOF(t)) - _INTSIZEOF(t)))</code></p>
+<p>这个宏用于获取下一个可变参数的值，并将 <code>va_list</code>（即 <code>ap</code>）指向下一个参数的位置。</p>
+<ul>
+<li><code>ap</code>：指向当前可变参数的指针。</li>
+<li><code>t</code>：表示下一个参数的类型。</li>
+<li><code>ap += _INTSIZEOF(t)</code>：首先，将 <code>ap</code> 增加 <code>t</code> 类型的对齐大小，指向下一个参数的位置。</li>
+<li><code>- _INTSIZEOF(t)</code>：然后将指针回退一个 <code>t</code> 类型的大小，得到当前参数的起始地址。</li>
+<li><code>*(t *)(...)</code>：将 <code>ap</code> 当前位置的内存解释为类型 <code>t</code>，并通过解引用 <code>*</code> 获取这个参数的值。</li>
+</ul>
+</li>
+<li>
+<p><code>#define va_end(ap) (ap = (va_list)0)</code></p>
+<p>这个宏用于结束可变参数的访问，将 <code>va_list</code> 设置为 <code>0</code>，表示不再访问可变参数。</p>
+<ul>
+<li><code>ap = (va_list)0</code>：将 <code>ap</code> 设置为 <code>0</code>，即释放对可变参数列表的访问。</li>
+</ul>
+</li>
+</ul>
+<p><strong>下半部分（代码示例）</strong></p>
+<ol>
+<li>
+<p><strong><code>void MyPrint(char *s, ...)</code></strong>:</p>
+<ul>
+<li>定义了一个可变参数函数<code>MyPrint</code>，它可以接收一个字符串和任意数量的后续参数。</li>
+<li><code>va_list marker; va_start(marker, s);</code> 初始化可变参数列表，<code>marker</code>将用于访问这些参数。</li>
+<li>通过遍历字符串<code>s</code>，逐个检查字符。如果字符是<code>%</code>，则根据接下来的字符来决定如何处理可变参数。
+<ul>
+<li>例如，如果是<code>%f</code>，那么使用<code>va_arg(marker, double)</code>读取一个<code>double</code>类型的参数。</li>
+<li>如果是<code>%d</code>，读取一个<code>int</code>类型的参数。</li>
+<li>如果是<code>%c</code>，读取一个<code>char</code>类型的参数。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>循环和<code>switch</code>语句</strong>:</p>
+<ul>
+<li>当检测到<code>%</code>符号时，会进入<code>switch</code>，根据紧随的字符决定如何处理。</li>
+<li><code>%f</code> 会输出浮点数， <code>%d</code> 会输出整数， <code>%c</code> 会输出字符。</li>
+</ul>
+</li>
+<li>
+<p><strong><code>va_end(marker)</code></strong>: 在函数的最后，通过<code>va_end</code>结束可变参数处理。</p>
+</li>
+</ol>
+<p><strong><code>main()</code>函数中的例子：</strong></p>
+<p>在<code>main()</code>中调用<code>MyPrint</code>函数，传递的参数是一个字符串和具体的参数值：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">MyPrint</span>(<span class="string">&quot;double: %f integer: %d string: %c&quot;</span>, <span class="number">1.1</span>, <span class="number">100</span>, <span class="string">&#x27;A&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<p>该函数将会根据格式化字符串依次输出浮点数、整数和字符。</p>
+<p><strong>格式化攻击（攻击风险）：</strong></p>
+<p>这里提到了<strong>格式化串攻击</strong>（format string attack），这是一种常见的漏洞攻击手段。通过操纵格式化字符串，攻击者可以导致程序意外的行为，甚至访问未授权的内存空间。特别是当使用不受控制的用户输入作为格式化串时，可能会导致安全问题。</p>
+<p><strong>右上角公式：</strong></p>
+<p>PPT 右上角的公式部分展示了三种不同的用于对齐整数的表达式，目的是<strong>将 <code>x</code> 向上对齐到 <code>n</code> 的倍数</strong>。</p>
+<ol>
+<li><code>[(x + n - 1) / n] * n</code></li>
+</ol>
+<p>这是一个典型的对齐操作，旨在将 <code>x</code> 向上对齐到 <code>n</code> 的倍数。</p>
+<ul>
+<li><code>x + n - 1</code>：通过加上 <code>n - 1</code>，确保任何不满足对齐条件的数都能被&quot;进位&quot;到下一个倍数。</li>
+<li><code>(x + n - 1) / n</code>：将 <code>x + n - 1</code> 除以 <code>n</code>，表示 <code>x</code> 已经接近的那个 <code>n</code> 的倍数。</li>
+<li><code>[...]*n</code>：最终将结果乘以 <code>n</code>，从而得到对齐后的值。</li>
+</ul>
+<ol start="2">
+<li><code>((x + n - 1) / n) * n</code></li>
+</ol>
+<p>这是上面公式的另一种写法，表达的是相同的逻辑：将 <code>x</code> 向上对齐到 <code>n</code> 的倍数。</p>
+<ul>
+<li><code>x + n - 1</code>：如上，加上 <code>n - 1</code> 以确保非倍数的数被向上取整。</li>
+<li><code>(x + n - 1) / n</code>：求出除以 <code>n</code> 后的整数部分。</li>
+<li><code>(...)*n</code>：最后乘以 <code>n</code> 得出结果。</li>
+</ul>
+<p>这个表达式的作用与第一个表达式完全相同。</p>
+<ol start="3">
+<li><code>(x + n - 1) &amp; ~(n - 1)</code></li>
+</ol>
+<p>这个表达式使用位运算来实现对齐操作，它的效率更高，尤其是在底层的二进制系统中进行位运算时。</p>
+<ul>
+<li><code>x + n - 1</code>：同样，通过加上 <code>n - 1</code>，确保 <code>x</code> 能被向上对齐。</li>
+<li><code>n - 1</code>：<code>n</code> 是对齐的倍数，因此 <code>n - 1</code> 会创建一个掩码，例如，如果 <code>n = 4</code>，则 <code>n - 1 = 3</code>，即 <code>0000...0011</code>。</li>
+<li><code>~(n - 1)</code>：按位取反操作将掩码的低位置为 0，而高位为 1。例如，<code>~(3)</code> 会得到 <code>...11111100</code>。</li>
+<li><code>&amp; ~(n - 1)</code>：对 <code>x + n - 1</code> 进行按位与操作，使得低位的未对齐部分被清零，高位保持不变，从而得到对齐后的值。</li>
+</ul>
+<p><strong>示例</strong>：</p>
+<p>假设 <code>x = 7</code>，<code>n = 4</code>，即希望将 <code>7</code> 向上对齐到 <code>4</code> 的倍数：</p>
+<ul>
+<li><code>x + n - 1 = 7 + 4 - 1 = 10</code></li>
+<li><code>n - 1 = 3</code>，二进制表示为 <code>0000...0011</code></li>
+<li><code>~(n - 1) = ...11111100</code></li>
+<li><code>10 &amp; ~3 = 10 &amp; 252 = 8</code> （二进制：<code>1010 &amp; 11111100 = 1000</code>）</li>
+</ul>
+<p>最终结果是 <code>8</code>，同样是将 <code>7</code> 向上对齐到 8。</p>
+<p><strong>总结：</strong></p>
+<ul>
+<li>前两个公式使用的是四则运算的方式进行对齐，核心是通过加法和除法来确保 <code>x</code> 被向上对齐到 <code>n</code> 的倍数。</li>
+<li>第三个公式使用位运算来实现对齐，通过掩码操作来清除未对齐的低位，从而更高效地实现对齐，<strong>尤其适合 <code>n</code> 是 2 的幂的情况。</strong></li>
+</ul>
+<p>这三个表达式的核心思想是相同的，都是为了确保 <code>x</code> 被向上对齐到 <code>n</code> 的倍数，但第三个表达式在硬件层面的实现中效率更高。</p>
+<h2 id="fastcall">fastcall</h2>
+<h3 id="示例-4">示例</h3>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C6/image-20241025194415653.png" class="" title="image-20241025194415653">
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C6/image-20241025194830206.png" class="" title="image-20241025194830206">
+<p>这张PPT展示了使用 <code>__fastcall</code> 调用约定下，函数参数如何通过寄存器传递，函数栈帧的构建，以及函数返回值的处理。它结合了C语言代码和对应的汇编指令。我们详细解释其中的每个细节：</p>
+<ol>
+<li>C代码</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> r = <span class="number">0</span>;</span><br><span class="line">    r = <span class="built_in">func</span>(<span class="number">1</span>, <span class="number">2</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">__attribute__((fastcall))</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">func</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>func()</code> 使用 <code>__fastcall</code> 调用约定，它的参数 <code>a</code> 和 <code>b</code> 会<strong>通过寄存器传递</strong>，而不是通过堆栈传递（通常参数是通过堆栈传递的）。</li>
+</ul>
+<ol start="2">
+<li><strong>函数调用和栈帧分析</strong></li>
+</ol>
+<p><code>main</code> 函数部分：</p>
+<ol>
+<li>
+<p><code>mov $0x2, edx</code></p>
+<ul>
+<li>将常量 <code>2</code> 赋值给寄存器 <code>edx</code>。这是参数 <code>b</code> 的值。</li>
+</ul>
+</li>
+<li>
+<p><code>mov $0x1, ecx</code></p>
+<ul>
+<li>将常量 <code>1</code> 赋值给寄存器 <code>ecx</code>。这是参数 <code>a</code> 的值。</li>
+</ul>
+</li>
+<li>
+<p><code>call _Z4funcii</code></p>
+<ul>
+<li>调用函数 <code>func</code>，跳转到 <code>_Z4funcii</code> 的地址。这条指令将 <code>eip</code>（指令指针）压入堆栈，并跳转到 <code>func</code> 的入口。</li>
+</ul>
+</li>
+<li>
+<p><code>mov eax, -0xc(ebp)</code></p>
+<ul>
+<li>将 <code>eax</code> 寄存器（<code>func</code> 函数返回的值）的值存储到 <code>main</code> 函数的栈帧中的局部变量 <code>r</code>。这里 <code>-0xc(ebp)</code> 是 <code>r</code> 在 <code>main</code> 函数栈中的位置。</li>
+</ul>
+</li>
+</ol>
+<p><code>func</code> 函数部分：</p>
+<ol start="11">
+<li><code>push ebp</code></li>
+</ol>
+<ul>
+<li>保存 <code>ebp</code>（当前栈帧的基地址），准备为新函数建立栈帧。</li>
+</ul>
+<ol start="12">
+<li><code>mov esp, ebp</code></li>
+</ol>
+<ul>
+<li>设置 <code>ebp</code> 为当前 <code>esp</code>，从而创建新的栈帧。<code>ebp</code> 用来固定访问参数和局部变量的基地址。</li>
+</ul>
+<ol start="13">
+<li><code>sub $0x18, esp</code></li>
+</ol>
+<ul>
+<li>在栈上为局部变量分配空间。这里是分配了 <code>0x18</code> 字节。</li>
+</ul>
+<ol start="14">
+<li><code>mov ecx, -0x14(ebp)</code></li>
+</ol>
+<ul>
+<li>将寄存器 <code>ecx</code>（对应 <code>a</code> 的值）保存到 <code>func</code> 函数的栈中，位置为 <code>-0x14(ebp)</code>。</li>
+</ul>
+<ol start="15">
+<li><code>mov edx, -0x18(ebp)</code></li>
+</ol>
+<ul>
+<li>将寄存器 <code>edx</code>（对应 <code>b</code> 的值）保存到 <code>func</code> 函数的栈中，位置为 <code>-0x18(ebp)</code>。</li>
+</ul>
+<ol start="16">
+<li><code>mov -0x14(ebp), edx</code></li>
+</ol>
+<ul>
+<li>将 <code>a</code> 的值从栈中取回到 <code>edx</code> 寄存器。</li>
+</ul>
+<ol start="17">
+<li><code>mov -0x18(ebp), eax</code></li>
+</ol>
+<ul>
+<li>将 <code>b</code> 的值从栈中取回到 <code>eax</code> 寄存器。</li>
+</ul>
+<ol start="18">
+<li><code>add edx, eax</code></li>
+</ol>
+<ul>
+<li>执行 <code>a + b</code> 的运算，将结果存入 <code>eax</code>。此时 <code>eax</code> 中存储了函数的返回值。</li>
+</ul>
+<ol start="19">
+<li><code>mov eax, -0x4(ebp)</code></li>
+</ol>
+<ul>
+<li>将 <code>eax</code>（即 <code>a + b</code> 的结果）存储到函数 <code>func</code> 的返回值位置，即栈帧中 <code>ebp</code> 的 <code>-0x4</code> 偏移处。</li>
+</ul>
+<ol start="20">
+<li><code>leave</code></li>
+</ol>
+<ul>
+<li>归还栈帧，恢复调用函数的 <code>ebp</code>，即 <code>mov esp, ebp; pop ebp</code> 的简写。</li>
+</ul>
+<ol start="21">
+<li><code>ret</code></li>
+</ol>
+<ul>
+<li>返回调用者，恢复 <code>eip</code>（指令指针），即从 <code>_Z4funcii</code> 返回到 <code>main</code> 函数继续执行。</li>
+</ul>
+<h3 id="示例-5">示例</h3>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C6/image-20241025194842012.png" class="" title="image-20241025194842012">
+<p>这张PPT展示了使用 <code>__fastcall</code> 调用约定下，如何处理<strong>包含三个参数</strong>的函数调用过程，以及其在栈中的变化。我们将对C代码、汇编指令和栈的布局进行详细分析。</p>
+<p><strong>1. C代码部分</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> r = <span class="number">0</span>;</span><br><span class="line">    r = <span class="built_in">func</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>);  <span class="comment">// 调用带有三个参数的函数</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">__attribute__((fastcall))</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">func</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b, <span class="type">int</span> c)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a + b + c;  <span class="comment">// 返回三个参数的和</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>func()</code> 函数使用 <code>__fastcall</code> 调用约定，这意味着<strong>前两个参数 <code>a</code> 和 <code>b</code> 是通过寄存器传递，而第三个参数 <code>c</code> 通过堆栈传递</strong>。</li>
+</ul>
+<ol start="2">
+<li>汇编指令和栈帧分析</li>
+</ol>
+<p><code>main</code> 函数部分：</p>
+<ol>
+<li>
+<p><code>sub $0xc, esp</code></p>
+<ul>
+<li>为局部变量和栈帧分配12个字节的空间。</li>
+</ul>
+</li>
+<li>
+<p><code>push $0x3</code></p>
+<ul>
+<li><strong>将常量 <code>3</code> 压入栈中。因为 <code>__fastcall</code> 调用约定下，第三个参数 <code>c</code> 是通过堆栈传递的。</strong></li>
+</ul>
+</li>
+</ol>
+<p><code>function</code> 函数部分：</p>
+<ol>
+<li>其实关键点就在于第21行将存在栈中的参数3移到eax中参与运算</li>
+</ol>
+<h2 id="按名字调用-按值-结果调用">按名字调用/按值-结果调用</h2>
+<h3 id="示例-6">示例</h3>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C6/image-20241025200538398.png" class="" title="image-20241025200538398">
+<p>这张PPT讨论了两种常见的参数传递方式——<strong>Call by Name</strong> 和 <strong>Call by Value-Result</strong>，并展示了它们在运行时的行为差异。</p>
+<ol>
+<li><strong>Call by Name</strong> （按名字调用）</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">p</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">    ++i; </span><br><span class="line">    ++x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> a[<span class="number">10</span>]; </span><br><span class="line"><span class="type">int</span> i = <span class="number">1</span>;</span><br><span class="line">a[<span class="number">1</span>] = <span class="number">1</span>; </span><br><span class="line">a[<span class="number">2</span>] = <span class="number">2</span>; </span><br><span class="line"><span class="built_in">p</span>(a[i]);</span><br></pre></td></tr></table></figure>
+<p><strong>解释</strong></p>
+<ul>
+<li>
+<p><strong>Call by Name</strong> 的意思是：参数不是立即被计算的，而是在需要的时候才进行求值，这也称为<strong>延迟求值（Delayed Evaluation）</strong>。</p>
+</li>
+<li>
+<p>在上面的代码中，<code>p(a[i])</code>将数组元素<code>a[i]</code>作为参数传递给函数<code>p</code>。但在“按名字调用”模式下，传递的不是实际的值，而是一个类似表达式的引用。也就是说，每次在<code>p()</code>函数内部使用参数时，都会动态地重新计算<code>a[i]</code>的值。</p>
+<p>具体步骤：</p>
+<ol>
+<li><code>a[1] = 1;</code> 将<code>a[1]</code>赋值为1。</li>
+<li><code>a[2] = 2;</code> 将<code>a[2]</code>赋值为2。</li>
+<li><code>p(a[i])</code> 传递的是一个表达式，代表数组<code>a[i]</code>，由于<code>i</code>初始化为<code>1</code>，因此<code>a[i]</code>在开始时等于<code>a[1]</code>，即值<code>1</code>。</li>
+<li>在函数<code>p()</code>中，<code>++i</code> 将全局变量<code>i</code>加1，这时<code>i = 2</code>。</li>
+<li>紧接着的<code>++x</code> 实际上是对<code>a[i]</code>的操作，因为此时<code>i</code>的值已经是2，所以操作的其实是<code>a[2]</code>。因此<code>a[2]</code>从<code>2</code>变成了<code>3</code>。</li>
+</ol>
+<p>这就是<strong>Call by Name</strong>的特点：<strong>参数不是值本身，而是一个表达式，延迟到使用时才求值</strong>。这种机制可能会导致函数内部改变调用时传入的变量（如<code>i</code>）后，参数的值也会变化。</p>
+</li>
+</ul>
+<p><strong>总结</strong></p>
+<ul>
+<li><strong>延迟求值（Delayed Evaluation）</strong>：在<code>p(a[i])</code>的调用过程中，<strong><code>a[i]</code>是在<code>p()</code>内部求值的，每次访问时都会动态计算<code>a[i]</code>的值</strong>。因此，在<code>i</code>变化时，<code>a[i]</code>的值也随之改变。</li>
+</ul>
+<ol start="2">
+<li><strong>Call by Value-Result</strong> （按值-结果调用）</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">p</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> </span>&#123;</span><br><span class="line">    ++x; </span><br><span class="line">    ++y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="built_in">p</span>(a, a);</span><br></pre></td></tr></table></figure>
+<p><strong>解释</strong></p>
+<ul>
+<li>
+<p><strong>Call by Value-Result</strong> 是一种参数传递方式，首先将传递的实参<strong>按值</strong>复制到形参中，函数对这些形参进行操作。函数结束时，再将形参的值<strong>返回并更新</strong>到原来的实参中，因此也称为<strong>Copy-Restore</strong> 模式。</p>
+</li>
+<li>
+<p>在上面的代码中，<code>p(a, a)</code> 将变量<code>a</code>的值传递两次，分别给函数<code>p()</code>的参数<code>x</code>和<code>y</code>。此时，<code>x</code>和<code>y</code>是独立的局部变量，它们的初始值都是<code>a</code>的值，即<code>1</code>。</p>
+<p>具体步骤：</p>
+<ol>
+<li><code>a = 1;</code> 初始化变量<code>a</code>的值为1。</li>
+<li><code>p(a, a)</code> 调用函数<code>p()</code>，由于是<strong>按值-结果</strong>调用，首先将<code>a</code>的值复制给<code>x</code>和<code>y</code>。</li>
+<li>在函数<code>p()</code>中，<code>++x</code> 将<code>x</code>的值增加1，所以<code>x</code>变为2。</li>
+<li>紧接着的<code>++y</code> 也将<code>y</code>的值增加1，所以<code>y</code>变为2。</li>
+<li>函数<code>p()</code>执行完毕后，<code>x</code>和<code>y</code>的值都恢复到外部的变量<code>a</code>中，即将局部变量的修改结果复制回去。因此，<code>a</code>最终的值是<strong>2</strong>。</li>
+</ol>
+</li>
+</ul>
+<p><strong>总结</strong></p>
+<ul>
+<li><strong>Copy-Restore</strong>：在<code>p(a, a)</code>的调用过程中，<code>x</code>和<code>y</code>在函数内部是局部的副本，函数结束后，它们的值会恢复到实际参数中。这种方式会导致变量被修改两次，如果传递的是同一个变量，它的最终值是两次修改后的结果。</li>
+</ul>
+<p><strong>3. 比较和总结</strong></p>
+<ul>
+<li>
+<p><strong>Call by Name（按名字调用）</strong>：参数按表达式传递，每次使用时都会重新计算表达式的值。这种方式的最大特点是延迟求值，参数的值随时可能变化，具体取决于调用时的上下文。</p>
+</li>
+<li>
+<p><strong>Call by Value-Result（按值-结果调用）</strong>：参数传递时，传递的是值的副本，函数修改的是局部变量，函数结束时再将结果复制回实际参数。其特点是函数返回后，参数的值会被更新为函数内部的结果。</p>
+</li>
+</ul>
+<p>==注意：上述两个都不是C++的实际传参机制，只是两个概念==</p>
+<ul>
+<li>C++是call by value和call by reference</li>
+</ul>
+<h2 id="函数原型">函数原型</h2>
+<h3 id="示例-7">示例</h3>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C6/image-20241025201514887.png" class="" title="image-20241025201514887">
+<ul>
+<li>==函数原型其实就是函数声明，排在文件最前面那个==</li>
+</ul>
+<ol>
+<li><strong>遵循先定义后使用原则</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>解释</strong>：在C++中，函数必须要先声明或者定义，才能在程序的其他部分使用。这意味着，当你在代码的某处调用函数时，编译器必须已经知道该函数的存在，包括它的返回类型、参数类型等。否则，编译器将无法解析该函数调用。</p>
+</li>
+<li>
+<p><strong>函数原型的作用</strong>：函数原型告诉编译器有关函数的信息，包括返回类型和参数类型，因此函数可以在函数定义之前调用。这是函数原型的主要作用。</p>
+</li>
+</ul>
+<ol start="2">
+<li><strong>自由安排函数定义位置</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>解释</strong>：函数原型允许开发者将函数定义和声明分开，这样可以在多个源文件中调用同一个函数，并自由安排函数定义的位置。例如，程序可以在文件的开头包含一个函数原型声明，然后在另一个文件中实际定义这个函数。这种灵活性提高了代码的组织性和可维护性。</p>
+</li>
+<li>
+<p><strong>实例</strong>：</p>
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 函数原型</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">printMessage</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 函数调用</span></span><br><span class="line">    <span class="built_in">printMessage</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数定义</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">printMessage</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Hello, World!&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这个例子中，<code>printMessage()</code>的原型在函数定义之前已经声明，所以它可以在<code>main()</code>中被调用，即使实际定义是在<code>main()</code>函数之后。</p>
+</li>
+</ul>
+<ol start="3">
+<li><strong>语句：只需参数类型，无需参数名称</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>解释</strong>：函数原型只需要指定参数的类型，而不要求提供参数的名称。比如 <code>void f(int, int);</code>，这里只描述了函数<code>f</code>接受两个<code>int</code>类型的参数，并不关心参数的名称。编译器只需要知道参数的类型即可。</p>
+</li>
+<li>
+<p><strong>详细说明</strong>：在函数原型中省略参数名称的做法使得函数声明更加简洁。通常这种省略仅在声明时使用，而在实际的函数定义中，还是需要给参数命名的，便于在函数体内使用这些参数。</p>
+<p>示例：</p>
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 函数原型</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">add</span><span class="params">(<span class="type">int</span>, <span class="type">int</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数定义</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">add</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; a + b &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在上面的例子中，函数原型 <code>void add(int, int);</code> 仅指定了两个 <code>int</code> 参数的类型，而在函数定义中，参数名称 <code>a</code> 和 <code>b</code> 被实际使用。</p>
+</li>
+</ul>
+<ol start="4">
+<li><strong>编译器检查</strong></li>
+</ol>
+<ul>
+<li><strong>解释</strong>：编译器在编译阶段会检查函数调用的合法性。也就是说，当你调用一个函数时，编译器会根据函数原型检查传递的参数是否与原型中的参数类型匹配。原型中的返回类型和参数类型定义了函数的&quot;接口&quot;，编译器将根据这些信息验证函数调用的正确性。</li>
+</ul>
+<ol start="5">
+<li><strong>示例：void f(int, int);</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>解释</strong>：这个函数原型 <code>void f(int, int);</code> 表示一个名为 <code>f</code> 的函数，它没有返回值（返回类型是 <code>void</code>），并接受两个 <code>int</code> 类型的参数。尽管参数名称被省略，但它仍然能告诉编译器函数的签名，并且调用该函数时，编译器会根据这个原型进行检查。</p>
+<p>在实际定义函数时，通常会给参数起名称：</p>
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;x: &quot;</span> &lt;&lt; x &lt;&lt; <span class="string">&quot;, y: &quot;</span> &lt;&lt; y &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="函数重载与多态">函数重载与多态</h2>
+<h3 id="示例-8">示例</h3>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C6/image-20241025202102216.png" class="" title="image-20241025202102216">
+<ol>
+<li><strong>函数重载（Overloading）</strong></li>
+</ol>
+<p><strong>重载的原则：</strong></p>
+<ul>
+<li>
+<p><strong>同名，参数不同</strong>：在C++中，函数重载允许在同一个作用域中定义多个名称相同但参数列表不同的函数。参数列表的不同可以表现为：</p>
+<ul>
+<li>参数的<strong>个数</strong>不同。</li>
+<li>参数的<strong>类型</strong>不同。</li>
+<li>参数的<strong>顺序</strong>不同（当类型不相同时）。</li>
+</ul>
+<p>但是<strong>返回类型</strong>并不能作为区分重载函数的标准，因为编译器只根据函数名和参数列表来确定调用哪个函数。返回类型并不包含在函数的签名中。</p>
+<p><strong>示例</strong>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">(<span class="type">int</span> x)</span></span>;       <span class="comment">// 打印整数</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">(<span class="type">double</span> x)</span></span>;    <span class="comment">// 打印浮点数</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span></span>; <span class="comment">// 打印两个整数</span></span><br></pre></td></tr></table></figure>
+<p>这些函数的名字都是 <code>print</code>，但是由于它们的参数列表不同，因此它们可以共存，且编译器能够根据调用时传递的参数类型和数量来选择调用哪个函数。</p>
+</li>
+</ul>
+<p><strong>匹配原则：</strong></p>
+<ul>
+<li>
+<p><strong>严格匹配</strong>：当编译器寻找函数时，<strong>首先会</strong>尝试严格匹配传入参数和可用的重载函数的参数。如果找到完全匹配的函数，就调用它。</p>
+</li>
+<li>
+<p><strong>内部转换</strong>：如果没有严格匹配，编译器会尝试进行隐式转换，如从<code>int</code>到<code>double</code>、从<code>float</code>到<code>double</code>等基础类型的转换。它会寻找可以通过隐式类型转换得到的重载函数。</p>
+</li>
+<li>
+<p><strong>用户定义的转换</strong>：如果基础类型的转换也没有找到匹配的函数，编译器可能会尝试调用用户定义的类型转换函数（如通过<code>operator</code>重载实现的转换）来进行参数转换。</p>
+</li>
+</ul>
+<p><strong>模棱两可的情况：</strong></p>
+<p>PPT中的例子提到：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">long</span>)</span></span>; </span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">double</span>)</span></span>; </span><br><span class="line"><span class="built_in">f</span>(<span class="number">10</span>);  <span class="comment">// ambiguous</span></span><br></pre></td></tr></table></figure>
+<p>在这个例子中，<code>f(10)</code> 调用会引发编译错误，因为 <code>10</code> 是 <code>int</code> 类型，但编译器不知道应该将 <code>int</code> 转换为 <code>long</code> 还是 <code>double</code>。这就是所谓的**模棱两可（ambiguous）**问题。由于<code>long</code>和<code>double</code>都是<code>int</code>的合理转换目标，编译器无法确定调用哪个版本的<code>f()</code>。</p>
+<p>解决这种模棱两可的问题的一种方法是显式地指定类型：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">f</span>(<span class="built_in">static_cast</span>&lt;<span class="type">long</span>&gt;(<span class="number">10</span>));  <span class="comment">// 明确调用 long 版本</span></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li><strong>符号表（Name Mangling）</strong></li>
+</ol>
+<p><strong>符号表的概念：</strong></p>
+<ul>
+<li>
+<p><strong>Name Mangling</strong> 是C++编译器用来解决函数重载的技术。由于C语言不支持函数重载，因此在链接C++程序时，<strong>编译器会通过修改函数的名字来包含参数类型等信息，确保每个重载函数都有一个唯一的符号</strong>。这就是所谓的符号改编（Name Mangling）。</p>
+</li>
+<li>
+<p>在PPT中，<code>int func(int d)</code> 被改编为 <code>_Z4funci</code>。这是C++编译器对函数名称的改编形式，<strong>它将函数的参数类型编码进符号名中，确保每个重载函数都有唯一的符号</strong>。</p>
+</li>
+</ul>
+<p><strong>与 C 语言的兼容：</strong></p>
+<ul>
+<li><strong>extern “C”</strong>：PPT中提到 <code>extern &quot;C&quot; void foo();</code> 这是用来告诉编译器不要对 <code>foo</code> 进行符号改编（Name Mangling），以便与C语言进行互操作。C语言不支持函数重载，因此C语言的符号命名是简单的，而C++使用符号改编来支持其复杂的特性。</li>
+<li><strong>使用<code>extern &quot;C&quot;</code>可以确保C++编译器生成的符号与C语言兼容，通常用于C++代码与C语言库之间的交互</strong>。例如，链接C语言的库文件时，就需要通过<code>extern &quot;C&quot;</code>来防止C++的符号改编。</li>
+</ul>
+<ol start="3">
+<li><strong>多态性（Polymorphism）</strong></li>
+</ol>
+<p>多态性是C++面向对象编程的重要概念，它允许一个函数或对象表现出不同的行为。这里的多态性是指通过<strong>函数重载</strong>实现的静态多态（编译时多态），即同名函数根据不同的参数执行不同的代码。</p>
+<ul>
+<li>
+<p><strong>编译时多态</strong>：在函数重载中，编译器在编译时就能确定调用哪个函数，因此这是静态多态的一种表现。</p>
+</li>
+<li>
+<p><strong>运行时多态</strong>：另一种多态是通过**虚函数（virtual function）**实现的动态多态。在运行时，程序会根据实际的对象类型来选择调用的函数版本。</p>
+</li>
+</ul>
+<h2 id="带默认参数的函数">带默认参数的函数</h2>
+<h3 id="示例-9">示例</h3>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C6/image-20241025203334681.png" class="" title="image-20241025203334681">
+<ol>
+<li><strong>带默认参数的函数</strong></li>
+</ol>
+<p><strong>默认参数的声明</strong></p>
+<ul>
+<li>
+<p><strong>函数原型中给出</strong>：默认参数通常在**函数声明（函数原型）**中给出，也就是说，可以在函数的声明部分为某些参数提供默认值，而在调用函数时可以选择是否传递这些参数。</p>
+<p>示例：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">myFunction</span><span class="params">(<span class="type">int</span> x = <span class="number">10</span>)</span></span>; <span class="comment">// 函数声明</span></span><br></pre></td></tr></table></figure>
+<p>在这个例子中，参数<code>x</code>有一个默认值<code>10</code>，这意味着如果在调用函数时不传递<code>x</code>，函数会自动使用这个默认值。</p>
+</li>
+<li>
+<p><strong>定义中给出</strong>：如果在函数声明中没有提供默认参数，也可以在函数定义中给出。但要注意：<strong>默认参数只能在声明或定义中提供一次，不能重复给定。</strong></p>
+<p>示例：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">myFunction</span><span class="params">(<span class="type">int</span> x)</span></span>;  <span class="comment">// 声明中没有默认值</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">myFunction</span><span class="params">(<span class="type">int</span> x = <span class="number">10</span>)</span> </span>&#123;  <span class="comment">// 定义中给出默认值</span></span><br><span class="line">    std::cout &lt;&lt; x &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>重点</strong>：PPT中提到的“函数原型中给出”这一点表明，<strong>通常我们在函数声明中设置默认参数，这样函数可以在定义之前被调用。</strong></p>
+</li>
+</ul>
+<p><strong>默认参数的顺序</strong></p>
+<ul>
+<li>
+<p><strong>从右到左</strong>：默认参数必须从参数列表的最右侧开始提供，不能跳过中间的参数。例如，不能为第一个参数提供默认值而不给第二个参数提供默认值。</p>
+<p>正确的例子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">myFunction</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y = <span class="number">10</span>)</span></span>;  <span class="comment">// y有默认值</span></span><br></pre></td></tr></table></figure>
+<p>错误的例子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">myFunction</span><span class="params">(<span class="type">int</span> x = <span class="number">5</span>, <span class="type">int</span> y)</span></span>;  <span class="comment">// 错误，y没有默认值，x有默认值</span></span><br></pre></td></tr></table></figure>
+<p>原因在于，C++的函数调用时从左到右匹配参数，如果你给第一个参数设定默认值却不给第二个参数设定默认值，那么在调用时编译器会不知道如何匹配这些参数。</p>
+</li>
+</ul>
+<p><strong>不间断的默认参数</strong></p>
+<ul>
+<li>
+<p>如果某个参数有默认值，那么它右侧的所有参数也必须有默认值，才能使默认参数顺序保持一致。这是为了确保函数调用时的参数匹配不会产生歧义。</p>
+<p>例如：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">example</span><span class="params">(<span class="type">int</span> a = <span class="number">1</span>, <span class="type">int</span> b = <span class="number">2</span>, <span class="type">int</span> c = <span class="number">3</span>)</span></span>;  <span class="comment">// 正确</span></span><br></pre></td></tr></table></figure>
+<p>如果第一个或第二个参数有默认值，而第三个没有，就会产生问题。</p>
+</li>
+</ul>
+<ol start="2">
+<li><strong>默认参数与函数重载</strong></li>
+</ol>
+<p>PPT提到<strong>重载的补充</strong>，这意味着默认参数可以与函数重载一起使用，但在某些情况下可能会引发**模棱两可（ambiguous）**的问题。</p>
+<p>例如：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">int</span>)</span></span>;           <span class="comment">// 声明1</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">int</span>, <span class="type">int</span> = <span class="number">2</span>)</span></span>;  <span class="comment">// 声明2</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>当你调用 <code>f(10)</code> 时，编译器无法确定到底应该调用哪个版本的 <code>f()</code>，因为 <code>f(10)</code> 同时满足这两个声明的条件：
+<ul>
+<li>它可以调用声明1，因为 <code>f(int)</code> 只需要一个参数；</li>
+<li>它也可以调用声明2，因为 <code>f(int, int = 2)</code> 提供了一个默认参数，因此只传递一个参数也是可以的。</li>
+</ul>
+</li>
+</ul>
+<p>这种情况会导致模棱两可的错误，编译器无法确定使用哪个版本的函数。为了避免这种情况，函数重载和默认参数的使用必须谨慎。</p>
+<ol start="3">
+<li><strong>函数重载与默认参数的实际区别</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>默认参数和函数重载是两种不同的机制</strong>。默认参数是指在函数声明中为参数提供默认值，使得函数调用时可以省略部分参数，而函数重载是通过相同的函数名和不同的参数列表来定义多个函数。</p>
+<p><strong>函数重载示例</strong>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">(<span class="type">int</span> x)</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">(<span class="type">double</span> x)</span></span>;</span><br></pre></td></tr></table></figure>
+<p><strong>默认参数示例</strong>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y = <span class="number">0</span>)</span></span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>它们可以同时使用，但如果使用不当会导致编译器无法区分函数调用，从而导致编译错误。</p>
+</li>
+</ul>
+<h2 id="inline">inline</h2>
+<h3 id="示例-10">示例</h3>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C6/image-20241025203633682.png" class="" title="image-20241025203633682">
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C6/image-20241025203749044.png" class="" title="image-20241025203749044">
+<p>这两张PPT共同探讨了**函数的执行与成本（COST）<strong>和</strong>内联函数（inline function）**的概念。我们可以从执行时的堆栈、数据段与内联函数的使用入手，详细解释其中涉及的概念和问题。</p>
+<p><strong>第一张PPT：函数执行与内存模型</strong></p>
+<ol>
+<li><strong>Q1: 能否不降低可读性的前提下，降低COST？</strong></li>
+</ol>
+<ul>
+<li>
+<p>这里的<strong>COST</strong>（成本）指的是函数调用的开销。函数调用时涉及的成本主要包括：</p>
+<ul>
+<li><strong>栈操作</strong>：每次函数调用都会在栈上分配局部变量的空间，同时保存返回地址和其他必要的上下文信息。</li>
+<li><strong>参数传递</strong>：参数通过栈或者寄存器传递，尤其是较大的数据结构，传递时会增加开销。</li>
+<li><strong>跳转和返回</strong>：调用函数需要进行跳转并在结束时返回。</li>
+</ul>
+<p><strong>优化方向</strong>：</p>
+<ul>
+<li><strong>使用内联函数</strong>：在不增加代码复杂度的前提下，可以通过使用内联函数来减少函数调用的开销。<strong>内联函数会将函数体直接插入调用点，避免了栈操作和跳转</strong>，因此能够降低调用开销（COST）。</li>
+</ul>
+</li>
+</ul>
+<ol start="2">
+<li><strong>Q2: 使用Lib需要注意什么？</strong></li>
+</ol>
+<ul>
+<li>这个问题涉及到在使用外部库（Lib）时需要注意的事项。可能需要关注以下几点：
+<ul>
+<li><strong>内存分配</strong>：图中展示了堆（Heap）和栈（Stack）的分布。库中的某些操作可能会分配堆内存（例如使用<code>malloc</code>）。要确保正确地管理内存，避免内存泄漏。</li>
+<li><strong>库的依赖</strong>：使用外部库时要了解该库的依赖项，确保在编译和链接时正确配置这些依赖。</li>
+<li><strong>ABI（应用二进制接口）兼容性</strong>：在不同的系统或者编译器之间，库的接口需要保持一致，尤其是在跨平台开发时，要确保库的ABI兼容。</li>
+</ul>
+</li>
+</ul>
+<ol start="3">
+<li><strong>Q3: 执行性能？</strong></li>
+</ol>
+<ul>
+<li>
+<p>这个问题考察的是代码执行的性能，特别是堆栈与代码段的配合。</p>
+<ul>
+<li><strong>代码段</strong>（Code）：包含函数的机器指令，属于只读区域（R）。</li>
+<li><strong>数据段</strong>（Data）：包含全局变量、静态变量等可读写数据（RW）。</li>
+<li><strong>堆</strong>（Heap）：动态分配的内存区域（如<code>malloc</code>），存放动态数据。</li>
+<li><strong>栈</strong>（Stack）：用于函数调用时存储局部变量、参数和返回地址，是最常见的动态区域。</li>
+</ul>
+<p><strong>执行性能的提升</strong>：</p>
+<ul>
+<li>减少栈上不必要的操作，合理管理堆内存。</li>
+<li>通过<strong>内联函数减少调用开销</strong>，减少不必要的动态内存分配操作。</li>
+<li>优化局部变量和全局变量的使用，合理安排数据段和栈的使用。</li>
+</ul>
+</li>
+</ul>
+<p><strong>PPT中涉及的内存模型</strong></p>
+<ul>
+<li><strong>静态符号表</strong>：展示了静态变量和全局变量的内存地址（例如<code>x</code>和<code>d</code>），这些变量位于数据段。</li>
+<li><strong>代码段</strong>：表示函数的机器代码存放的位置，多个函数调用共享代码段，只有在执行时才会跳转到对应的地址执行。</li>
+</ul>
+<p><strong>第二张PPT：内联函数（inline function）</strong></p>
+<ol>
+<li><strong>目的</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>提高可读性</strong>：使用内联函数可以减少代码冗余。将常用的小函数标记为<code>inline</code>，编译器会在函数调用处直接插入函数体，避免传统函数调用的跳转，既简化了代码结构，又提高了代码的可读性。</p>
+</li>
+<li>
+<p><strong>提高效率</strong>：通过<strong>消除函数调用的栈操作、参数传递和跳转返回操作</strong>，内联函数可以提高性能。尤其在<strong>频繁调用的小函数场景</strong>下，内联函数能显著降低开销。</p>
+</li>
+</ul>
+<ol start="2">
+<li><strong>实现方法</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>编译器优化</strong>：当声明一个函数为<code>inline</code>时，编译器会试图将函数的代<strong>码直接插入到每个调用点</strong>，而不是通过函数调用的传统方式。这是一种<strong>编译期的优化</strong>，不会影响运行时的行为。</p>
+<p><strong>示例</strong>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> <span class="type">void</span> <span class="title">add</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x + y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> result = <span class="built_in">add</span>(<span class="number">5</span>, <span class="number">3</span>);  <span class="comment">// 编译时，add函数的代码会被直接插入到此处</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ol start="3">
+<li><strong>限制</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>递归</strong>：内联函数<strong>不能用于</strong>递归调用。如果递归函数被内联，将会导致无限扩展，最终使编译器无法处理。</p>
+</li>
+<li>
+<p><strong>函数指针</strong>：当使用函数指针调用函数时，内联优化是无效的。因为函数指针的调用是动态的，而内联函数的插入是静态的。</p>
+</li>
+</ul>
+<ol start="4">
+<li><strong>内联函数的使用场景</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>小型、频繁调用的函数</strong>：内联函数适合于小型且频繁调用的函数，例如getter、setter等。这些函数通常具有较少的逻辑，编译器可以轻松地将它们直接插入到调用点，从而避免函数调用的额外开销。</p>
+</li>
+<li>
+<p><strong>需要提高性能的场景</strong>：内联函数可以显著减少函数调用的开销，尤其在性能敏感的代码中，频繁调用的小函数可以使用<code>inline</code>关键字。</p>
+</li>
+</ul>
+<h3 id="示例-11">示例</h3>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C6/image-20241025204232656.png" class="" title="image-20241025204232656">
+<p>这张PPT通过一个<code>inline</code>函数的示例，展示了<strong>内联函数如何在编译过程中优化函数调用</strong>。右侧的汇编代码展示了函数<code>ascii</code>的内联过程，并且特别标注了<code>pushl $0x31</code>这一指令</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> <span class="type">int</span> <span class="title">ascii</span><span class="params">(<span class="type">char</span> c)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> c;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> r = <span class="number">0</span>;</span><br><span class="line">    r = <span class="built_in">ascii</span>(<span class="string">&#x27;1&#x27;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;r = %d\n&quot;</span>, r);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li><strong>关键点：<code>pushl $0x31</code></strong></li>
+</ol>
+<ul>
+<li>在没有内联优化的情况下，<code>ascii('1')</code>会生成一次函数调用，通过跳转执行<code>ascii</code>函数体，然后返回ASCII值。</li>
+<li>由于<code>ascii</code>是内联函数，编译器直接将<code>'1'</code>的ASCII值插入到调用点。因此，<code>pushl $0x31</code>这一行代码说明了<strong>编译器已经将字符<code>'1'</code>的ASCII值<code>49</code>直接嵌入到汇编代码中，而不需要通过函数调用来获得。</strong></li>
+</ul>
+<ol start="2">
+<li><strong>汇编中的.LCO</strong></li>
+</ol>
+<ul>
+<li><code>.LCO</code> 表示用于<code>printf</code>的字符串<code>&quot;r = %d\n&quot;</code>的地址，它是编译器为这个字符串分配的符号。在调用<code>printf</code>时，字符串地址会被压入栈中，后续的<code>call printf</code>会使用这个地址进行格式化输出。</li>
+</ul>
+<h3 id="示例-12">示例</h3>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C6/image-20241025204633116.png" class="" title="image-20241025204633116">
+<ol>
+<li><strong>适用场景</strong></li>
+</ol>
+<ul>
+<li><strong>频繁调用、小段代码</strong>： 内联函数适用于<strong>频繁调用、简单且短小的代码段</strong>。特别是那些逻辑简单的函数，例如访问器（getters）、设置器（setters）等，因为它们经常被调用，且函数体非常小，使用内联函数可以显著减少开销。</li>
+<li><strong>注意</strong>：并不是所有函数都适合内联。对于复杂的大型函数，内联并不能显著提高性能，反而可能导致代码膨胀，使得生成的机器代码变得臃肿，反而可能影响性能。因此，编译器也会在实际内联时进行权衡。</li>
+</ul>
+<ol start="2">
+<li><strong>“仅仅是请求”</strong></li>
+</ol>
+<ul>
+<li>
+<p>PPT中的红色文字“<strong>仅仅是请求</strong>”强调了一个重要的事实：在C++中，<code>inline</code> 关键字<strong>只是对编译器的建议，并不是强制指令</strong>。编译器最终会根据实际情况决定是否将函数内联。<strong>有些情况下，即使你声明了<code>inline</code>，编译器可能仍然不会将函数内联</strong>，比如函数过于复杂，或编译器认为内联并不会提高性能。</p>
+</li>
+<li>
+<p>同样，编译器也可以将没有标记为<code>inline</code>的函数内联化。这完全取决于编译器的优化策略。</p>
+</li>
+</ul>
+<h3 id="示例-13">示例</h3>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C6/image-20241025205028780-17298606291021.png" class="" title="image-20241025205028780">
+<ol>
+<li><strong>明智地运用Inlining</strong></li>
+</ol>
+<p><strong>只是对编译系统的提示</strong></p>
+<p>PPT强调内联函数只是对编译器的<strong>建议</strong>，编译器并不一定会按照程序员的请求将函数内联。即使使用了<code>inline</code>关键字，编译器会根据具体情况决定是否将函数内联化，这取决于函数的复杂度、编译器的优化设置和目标架构。</p>
+<p>以下几种情况可能会让<strong>编译器拒绝将函数内联</strong>：</p>
+<ul>
+<li>
+<p><strong>Big/complex functions</strong>：</p>
+<ul>
+<li>如果函数过大或者包含复杂的逻辑（如复杂的循环、<code>switch</code>语句等），编译器通常不会将其内联。内联的目的是为了提高执行效率，而复杂的函数内联后可能会导致代码膨胀，反而降低性能。</li>
+</ul>
+</li>
+<li>
+<p><strong>Function pointer</strong>：</p>
+<ul>
+<li>如果函数是通过<strong>函数指针</strong>调用的，编译器无法内联。函数指针在运行时才会被解析，编译器无法在编译时将代码插入到调用点。因此，内联只能用于直接调用的函数。</li>
+</ul>
+</li>
+</ul>
+<ol start="2">
+<li><strong>编译器的处理方式（Outlined）</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>static function</strong>：</p>
+<ul>
+<li>在某些情况下，编译器可能会选择将函数编译为静态函数而不是内联。这意味着编译器生成的目标代码中函数仍然作为一个独立的实体，而不是直接插入到调用点。这种处理方式常用于那些不适合内联的函数。</li>
+</ul>
+</li>
+<li>
+<p><strong>recompile/link vs rebuild</strong>：</p>
+<ul>
+<li>这里提到的<strong>重新编译</strong>和<strong>重建</strong>，是指当程序修改后重新生成目标文件时，编译器会决定是否需要重新内联处理。如果代码发生了较大的变更，编译器可能会选择重新链接整个程序，而不是简单地内联。重新编译和重新链接的过程对于大型项目可能会影响构建时间，因此在使用内联时也要考虑到构建时间的成本。</li>
+</ul>
+</li>
+</ul>
+<ol start="3">
+<li><strong>内联函数的缺点</strong></li>
+</ol>
+<p>尽管内联函数有提高执行效率的优点，但它也有一些缺点。PPT列出了几个关键问题：</p>
+<p><strong>增加目标代码（object code）</strong></p>
+<ul>
+<li>内联函数的一个显著问题是<strong>代码膨胀</strong>。当编译器将函数体插入到每一个调用点时，函数调用的次数越多，插入的代码就越多。这会导致目标代码（object code）变得非常大，尤其是对于那些频繁调用的函数。代码膨胀可能导致更大的可执行文件，并且会占用更多的内存。</li>
+</ul>
+<p><strong>病态的换页（thrashing）</strong></p>
+<ul>
+<li>代码膨胀可能导致<strong>病态的换页</strong>（thrashing）。这是一个性能问题，当程序频繁调用内联函数，生成的大量代码可能导致CPU的指令缓存不够用，迫使系统频繁在内存和缓存之间换页。这会显著降低系统的性能，因为换页是一个非常昂贵的操作，特别是当系统处理大量内联代码时。</li>
+</ul>
+<p><strong>降低指令缓存命中率（instruction cache hit rate）</strong></p>
+<ul>
+<li>当内联函数导致目标代码变大时，会增加指令缓存的压力，降低缓存的<strong>命中率</strong>。指令缓存的命中率越高，程序的执行效率越高。内联函数可能会导致代码分布更加分散，降低CPU在高速缓存中存储指令的效果，进而导致更多的缓存未命中（cache miss），使得程序的运行效率下降。</li>
+</ul>
+<ol start="4">
+<li><strong>时间局部性与空间局部性</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>时间局部性</strong>：内联函数有可能影响<strong>时间局部性</strong>，即同一块数据或代码在较短时间内多次使用。如果内联函数导致了代码膨胀，增加了指令缓存的压力，可能会降低时间局部性，使得系统在执行相同指令时需要更多的时间。</p>
+</li>
+<li>
+<p><strong>空间局部性</strong>：内联函数同样可能影响<strong>空间局部性</strong>，即相邻的数据或指令能够存储在一起并被快速访问。代码膨胀可能使得相邻指令分布在内存的不同位置，破坏了空间局部性，从而降低了系统的性能。</p>
+</li>
+</ul>
+<h2 id="ROP攻击">ROP攻击</h2>
+<h3 id="示例-14">示例</h3>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C6/image-20241025205711187.png" class="" title="image-20241025205711187">
+<p>这张PPT展示了与**ROP攻击（Return-Oriented Programming）**相关的内存布局和代码执行流程。ROP是一种常见的攻击技术，攻击者利用已有的合法代码片段来进行恶意操作，而不需要直接注入新的恶意代码。</p>
+<ol>
+<li><strong>CODE段：现有的代码片段</strong></li>
+</ol>
+<p>在图的左侧，有三个函数 <code>Func1</code>、<code>Func2</code> 和 <code>Func3</code>，它们是程序中的正常代码片段，位于代码段（Code Segment）中。攻击者并不会直接修改这些函数的代码，而是利用这些函数中的小片段来执行恶意代码。</p>
+<p><strong>Func1：</strong></p>
+<ul>
+<li><code>push ebp</code> 和 <code>mov esp, ebp</code> 是典型的栈帧设置操作，设置当前栈帧。</li>
+<li><code>sub $0x10, esp</code> 为局部变量分配栈空间。</li>
+<li><code>mov (ebp+0xc), eax</code> 和 <code>mov (ebp+0x8), edx</code> 读取函数参数。</li>
+<li><code>add edx, eax</code> 执行简单的加法操作。</li>
+<li><code>ret</code> 是函数返回指令，它会从栈中弹出返回地址，跳转到该地址继续执行代码。</li>
+</ul>
+<p><strong>Func2 和 Func3：</strong></p>
+<ul>
+<li>这些函数类似，执行一些计算操作后，最终会通过 <code>ret</code> 返回。这里标记了多个内存地址，如 <code>bad_addr1</code>、<code>bad_addr2</code> 和 <code>bad_addr3</code>，这些地址是攻击者准备利用的“合法”代码片段的入口。</li>
+</ul>
+<p><strong>恶意利用（Malicious Code）</strong></p>
+<ul>
+<li>在ROP攻击中，攻击者并不会注入整个恶意代码段，而是利用程序中现有的“片段”——即这些合法的函数返回地址和指令组合。</li>
+<li><code>bad_addr1</code>、<code>bad_addr2</code> 和 <code>bad_addr3</code> 是ROP攻击中攻击者利用的“gadget”代码片段，这些片段通常由一两条指令和一个<code>ret</code>指令组成。攻击者通过改变栈上的返回地址，控制程序的执行流，使程序执行这些片段中的指令。</li>
+</ul>
+<ol start="2">
+<li><strong>STACK段：栈上的结构</strong></li>
+</ol>
+<p>图的右侧是栈（Stack）的结构，显示了执行过程中栈上的数据变化。在正常情况下，函数调用时会将返回地址和局部变量等内容存储在栈中，但在ROP攻击中，栈上的内容会被攻击者修改，用于执行恶意指令。</p>
+<ul>
+<li>
+<p><strong><code>ebp_main</code> 和 <code>esp_main</code></strong>：这些是栈顶和栈帧基址寄存器的当前状态。在正常情况下，它们指向当前函数的局部变量和返回地址。</p>
+</li>
+<li>
+<p><strong><code>Bad_addr</code></strong>：这是攻击者插入栈中的恶意地址，指向恶意的指令或者“gadget”代码片段。通过修改返回地址，攻击者使得程序返回时跳转到这些恶意的地址，执行任意指令。</p>
+</li>
+<li>
+<p><strong><code>mal_inst</code></strong>：栈中还保存了攻击者的恶意指令序列，这些指令可能是攻击者想要执行的恶意操作。</p>
+</li>
+</ul>
+<ol start="3">
+<li><strong>HEAP段：堆内存结构</strong></li>
+</ol>
+<p>图中右下方是堆（Heap）结构，显示了与ROP攻击相关的堆内存布局。堆上保存了一些恶意指令（<code>mal_inst</code>）和一些地址（<code>bad_addr1</code>、<code>bad_addr2</code> 等）。</p>
+<ul>
+<li>在某些情况下，攻击者可能利用堆中的数据作为攻击的一部分，通过溢出或者其它漏洞，将恶意代码片段插入堆中，并通过ROP技术跳转到堆中的恶意地址。</li>
+</ul>
+<ol start="4">
+<li>
+<p><strong>ROP攻击流程</strong></p>
+</li>
+<li>
+<p><strong>利用栈溢出或漏洞</strong>：</p>
+<ul>
+<li>攻击者首先利用栈溢出或者其它漏洞，将恶意数据写入栈中。正常情况下，栈上保存的是函数的返回地址和局部变量，但在ROP攻击中，攻击者会覆盖这些返回地址，使得函数返回时跳转到攻击者指定的“gadget”代码片段。</li>
+</ul>
+</li>
+<li>
+<p><strong>跳转到恶意地址</strong>：</p>
+<ul>
+<li>攻击者精心构造的栈布局会包含指向合法代码中的小片段（gadget）的地址，如图中的<code>bad_addr1</code>、<code>bad_addr2</code>、<code>bad_addr3</code>。当函数执行<code>ret</code>指令时，程序会跳转到这些地址，执行攻击者想要的操作。</li>
+</ul>
+</li>
+<li>
+<p><strong>控制程序执行流</strong>：</p>
+<ul>
+<li>通过一系列的“gadget”，攻击者可以控制程序的执行流，并执行任意恶意操作。这些操作可能包括修改内存、执行系统命令、甚至完全接管受害者系统。</li>
+</ul>
+</li>
+<li>
+<p><strong>恶意地址和指令的利用</strong></p>
+</li>
+</ol>
+<ul>
+<li>
+<p><strong>bad_addr1、bad_addr2、bad_addr3</strong>：这些是恶意利用的合法代码片段的入口地址。每一个<code>bad_addr</code>都指向一个代码片段，这些片段会执行一些操作后通过<code>ret</code>返回，接着程序会继续执行下一个恶意地址。</p>
+</li>
+<li>
+<p><strong>Malicious Code</strong>：攻击者利用这些地址，执行构建好的恶意代码序列。</p>
+</li>
+</ul>
+<ol start="6">
+<li><strong>总结：ROP攻击的原理</strong></li>
+</ol>
+<ul>
+<li>ROP攻击是一种通过合法代码片段执行恶意操作的攻击方式，攻击者利用栈溢出或其它漏洞改变栈上的返回地址。</li>
+<li>攻击者通过修改栈上的数据，让程序跳转到合法代码中的小片段，这些小片段称为“gadget”，每个gadget执行少量指令并通过<code>ret</code>返回。</li>
+<li>通过精心构造的gadget链，攻击者可以实现任意指令执行，控制程序行为，而无需直接注入完整的恶意代码。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Liu Kai-Qi</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/01/25/C6/">http://example.com/2025/01/25/C6/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">ChocStar🍫</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/C-%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/">C++高级程序设计</a></div><div class="post-share"><div class="social-share" data-image="/img/C++.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="prev-post pull-left" href="/2025/01/25/C5/" title="C++高级程序设计笔记（C5）"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/C++.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">C++高级程序设计笔记（C5）</div></div></a><a class="next-post pull-right" href="/2025/01/25/CPP-2-1/" title="C++高级程序设计笔记（C2-1）"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/C++.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">C++高级程序设计笔记（C2-1）</div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a href="/2025/01/25/C++%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" title="C++高级程序设计笔记（C1-C4）"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/C++.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="title">C++高级程序设计笔记（C1-C4）</div></div></a><a href="/2025/01/25/C7/" title="C++高级程序设计笔记（C7）"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/C++.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="title">C++高级程序设计笔记（C7）</div></div></a><a href="/2025/01/25/C8/" title="C++高级程序设计笔记（C8）"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/C++.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="title">C++高级程序设计笔记（C8）</div></div></a><a href="/2025/01/25/C5/" title="C++高级程序设计笔记（C5）"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/C++.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="title">C++高级程序设计笔记（C5）</div></div></a><a href="/2025/01/25/CPP-2-1/" title="C++高级程序设计笔记（C2-1）"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/C++.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="title">C++高级程序设计笔记（C2-1）</div></div></a><a href="/2025/01/25/CPP-2-4/" title="C++高级程序设计笔记（C2-4）"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/C++.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="title">C++高级程序设计笔记（C2-4）</div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Liu Kai-Qi</div><div class="author-info-description">Sometimes you have to go for it</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/liukqchoco"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/liukqchoco" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">C6</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E6%97%B6%E7%8E%AF%E5%A2%83"><span class="toc-number">1.1.</span> <span class="toc-text">运行时环境</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.1.1.</span> <span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#stdcall"><span class="toc-number">1.2.</span> <span class="toc-text">stdcall</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-2"><span class="toc-number">1.2.1.</span> <span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0"><span class="toc-number">1.3.</span> <span class="toc-text">可变参数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-3"><span class="toc-number">1.3.1.</span> <span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fastcall"><span class="toc-number">1.4.</span> <span class="toc-text">fastcall</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-4"><span class="toc-number">1.4.1.</span> <span class="toc-text">示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-5"><span class="toc-number">1.4.2.</span> <span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E5%90%8D%E5%AD%97%E8%B0%83%E7%94%A8-%E6%8C%89%E5%80%BC-%E7%BB%93%E6%9E%9C%E8%B0%83%E7%94%A8"><span class="toc-number">1.5.</span> <span class="toc-text">按名字调用&#x2F;按值-结果调用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-6"><span class="toc-number">1.5.1.</span> <span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E5%8E%9F%E5%9E%8B"><span class="toc-number">1.6.</span> <span class="toc-text">函数原型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-7"><span class="toc-number">1.6.1.</span> <span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E9%87%8D%E8%BD%BD%E4%B8%8E%E5%A4%9A%E6%80%81"><span class="toc-number">1.7.</span> <span class="toc-text">函数重载与多态</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-8"><span class="toc-number">1.7.1.</span> <span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%A6%E9%BB%98%E8%AE%A4%E5%8F%82%E6%95%B0%E7%9A%84%E5%87%BD%E6%95%B0"><span class="toc-number">1.8.</span> <span class="toc-text">带默认参数的函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-9"><span class="toc-number">1.8.1.</span> <span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#inline"><span class="toc-number">1.9.</span> <span class="toc-text">inline</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-10"><span class="toc-number">1.9.1.</span> <span class="toc-text">示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-11"><span class="toc-number">1.9.2.</span> <span class="toc-text">示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-12"><span class="toc-number">1.9.3.</span> <span class="toc-text">示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-13"><span class="toc-number">1.9.4.</span> <span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ROP%E6%94%BB%E5%87%BB"><span class="toc-number">1.10.</span> <span class="toc-text">ROP攻击</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-14"><span class="toc-number">1.10.1.</span> <span class="toc-text">示例</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/01/25/C++%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" title="C++高级程序设计笔记（C1-C4）"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/C++.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++高级程序设计笔记（C1-C4）"/></a><div class="content"><a class="title" href="/2025/01/25/C++%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" title="C++高级程序设计笔记（C1-C4）">C++高级程序设计笔记（C1-C4）</a><time datetime="2025-01-25T14:10:32.000Z" title="发表于 2025-01-25 22:10:32">2025-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/01/25/C7/" title="C++高级程序设计笔记（C7）"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/C++.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++高级程序设计笔记（C7）"/></a><div class="content"><a class="title" href="/2025/01/25/C7/" title="C++高级程序设计笔记（C7）">C++高级程序设计笔记（C7）</a><time datetime="2025-01-25T14:10:32.000Z" title="发表于 2025-01-25 22:10:32">2025-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/01/25/C8/" title="C++高级程序设计笔记（C8）"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/C++.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++高级程序设计笔记（C8）"/></a><div class="content"><a class="title" href="/2025/01/25/C8/" title="C++高级程序设计笔记（C8）">C++高级程序设计笔记（C8）</a><time datetime="2025-01-25T14:10:32.000Z" title="发表于 2025-01-25 22:10:32">2025-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/01/25/C5/" title="C++高级程序设计笔记（C5）"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/C++.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++高级程序设计笔记（C5）"/></a><div class="content"><a class="title" href="/2025/01/25/C5/" title="C++高级程序设计笔记（C5）">C++高级程序设计笔记（C5）</a><time datetime="2025-01-25T14:10:32.000Z" title="发表于 2025-01-25 22:10:32">2025-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/01/25/C6/" title="C++高级程序设计笔记（C6）"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/C++.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++高级程序设计笔记（C6）"/></a><div class="content"><a class="title" href="/2025/01/25/C6/" title="C++高级程序设计笔记（C6）">C++高级程序设计笔记（C6）</a><time datetime="2025-01-25T14:10:32.000Z" title="发表于 2025-01-25 22:10:32">2025-01-25</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2025 By Liu Kai-Qi</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Welcome to my blog!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>(() => {
+  const panguFn = () => {
+    if (typeof pangu === 'object') pangu.autoSpacingPage()
+    else {
+      btf.getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+        .then(() => {
+          pangu.autoSpacingPage()
+        })
+    }
+  }
+
+  const panguInit = () => {
+    if (false){
+      GLOBAL_CONFIG_SITE.isPost && panguFn()
+    } else {
+      panguFn()
+    }
+  }
+
+  btf.addGlobalFn('pjaxComplete', panguInit, 'pangu')
+  document.addEventListener('DOMContentLoaded', panguInit)
+})()</script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css')
+    if (false) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="30" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="你要找什么呀" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

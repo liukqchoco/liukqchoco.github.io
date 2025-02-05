@@ -1,0 +1,989 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>C++高级程序设计笔记（C7） | ChocStar🍫</title><meta name="author" content="Liu Kai-Qi"><meta name="copyright" content="Liu Kai-Qi"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="C7 程序组织 示例  这张PPT展示了C++程序的组织结构，主要通过头文件和源文件的划分来组织代码，并且强调了不同的作用域（Scope）。代码分布在三个文件中：a.h、const.h、a.cpp 和 b.cpp。  a.h — 头文件    a.h 是一个头文件，通常用于声明在多个文件中共享的变量和函数。   文件内容： 12extern float salary;extern void sho">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++高级程序设计笔记（C7）">
+<meta property="og:url" content="http://example.com/2025/01/25/C7/index.html">
+<meta property="og:site_name" content="ChocStar🍫">
+<meta property="og:description" content="C7 程序组织 示例  这张PPT展示了C++程序的组织结构，主要通过头文件和源文件的划分来组织代码，并且强调了不同的作用域（Scope）。代码分布在三个文件中：a.h、const.h、a.cpp 和 b.cpp。  a.h — 头文件    a.h 是一个头文件，通常用于声明在多个文件中共享的变量和函数。   文件内容： 12extern float salary;extern void sho">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/C++.jpg">
+<meta property="article:published_time" content="2025-01-25T14:10:32.000Z">
+<meta property="article:modified_time" content="2025-02-05T09:29:42.295Z">
+<meta property="article:author" content="Liu Kai-Qi">
+<meta property="article:tag" content="C++高级程序设计">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/C++.jpg"><link rel="shortcut icon" href="/img/web_label.png"><link rel="canonical" href="http://example.com/2025/01/25/C7/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        if (name && globalFn[key][name]) return
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":150,"languages":{"author":"作者: Liu Kai-Qi","link":"链接: ","source":"来源: ChocStar🍫","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"top-right"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'C++高级程序设计笔记（C7）',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-02-05 17:29:42'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/background.png);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post type-C++高级程序设计" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/C++.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">ChocStar🍫</span></a><a class="nav-page-title" href="/"><span class="site-name">C++高级程序设计笔记（C7）</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">C++高级程序设计笔记（C7）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-01-25T14:10:32.000Z" title="发表于 2025-01-25 22:10:32">2025-01-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-02-05T09:29:42.295Z" title="更新于 2025-02-05 17:29:42">2025-02-05</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/C-%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/">C++高级程序设计</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">9.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>33分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1>C7</h1>
+<h2 id="程序组织">程序组织</h2>
+<h3 id="示例">示例</h3>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C7/image-20241029141243146.png" class="" title="image-20241029141243146">
+<p>这张PPT展示了<strong>C++程序的组织结构</strong>，主要通过头文件和源文件的划分来组织代码，并且强调了不同的<strong>作用域（Scope）</strong>。代码分布在三个文件中：<code>a.h</code>、<code>const.h</code>、<code>a.cpp</code> 和 <code>b.cpp</code>。</p>
+<ol>
+<li><strong>a.h</strong> — 头文件</li>
+</ol>
+<ul>
+<li>
+<p><code>a.h</code> 是一个头文件，通常用于声明在多个文件中共享的变量和函数。</p>
+</li>
+<li>
+<p>文件内容：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="type">float</span> salary;</span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="type">void</span> <span class="title">show</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>extern float salary;</code>：这是一个外部变量声明，表示变量 <code>salary</code> 在其他文件中定义（例如 <code>a.cpp</code> 中），可以在其他文件中使用。</li>
+<li><code>extern void show();</code>：这是一个外部函数声明，表示 <code>show</code> 函数在其他文件中定义，也可以在其他文件中使用。</li>
+</ul>
+<p>头文件中使用 <code>extern</code> 关键字可以避免变量和函数的重复定义，<strong>使变量和函数在多个文件中共享。</strong></p>
+</li>
+</ul>
+<ol start="2">
+<li><strong>const.h</strong> — 常量头文件</li>
+</ol>
+<ul>
+<li>
+<p><code>const.h</code> 用于定义常量，它只包含一个常量定义。</p>
+</li>
+<li>
+<p>文件内容：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">double</span> pi = <span class="number">3.14</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>const double pi = 3.14;</code>：这是一个全局常量，表示圆周率的值为3.14。在多个文件中使用该常量时，通过包含 <code>const.h</code> 即可，不会产生重复定义的问题，因为 <code>const</code> 常量默认具有内部链接性。</li>
+</ul>
+<p><strong>常量头文件在项目中常用于集中定义全局常量</strong>，方便管理和修改。</p>
+</li>
+</ul>
+<ol start="3">
+<li><strong>a.cpp</strong> — 源文件A</li>
+</ol>
+<ul>
+<li><code>a.cpp</code> 是一个源文件，主要<strong>定义了 <code>a.h</code> 中声明的变量和函数</strong>，并包含了 <code>const.h</code> 头文件。</li>
+<li>文件内容：<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;const.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> count = <span class="number">0</span>;</span><br><span class="line"><span class="type">float</span> salary = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">show</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 函数体</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">process</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (...) &#123;</span><br><span class="line">        <span class="type">char</span> c;</span><br><span class="line">        <span class="comment">// 块级代码</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p><code>#include &quot;const.h&quot;</code>：通过包含 <code>const.h</code>，可以在 <code>a.cpp</code> 中使用常量 <code>pi</code>。</p>
+</li>
+<li>
+<p><code>static int count = 0;</code>：<code>count</code> 是一个静态局部变量，具有<strong>文件级</strong>作用域（即仅在 <code>a.cpp</code> 文件内部可见）。</p>
+</li>
+<li>
+<p><code>float salary = 0;</code>：这是变量 <code>salary</code> 的定义，<strong>对应于 <code>a.h</code> 中的声明。</strong></p>
+</li>
+<li>
+<p><code>void show()</code>：这是 <code>show</code> 函数的定义，<strong>对应于 <code>a.h</code> 中的声明。</strong></p>
+</li>
+<li>
+<p><code>static void process()</code>：<code>process</code> 函数使用 <code>static</code> 修饰，具有文件级作用域，仅在 <code>a.cpp</code> 文件内部可见。</p>
+</li>
+<li>
+<p><code>process</code> 函数内部：</p>
+<ul>
+<li><code>int i = 0;</code> 和 <code>char c;</code> 是局部变量，具有块级作用域，仅在 <code>process</code> 函数内部可见。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ol start="4">
+<li><strong>b.cpp</strong> — 源文件B</li>
+</ol>
+<ul>
+<li><code>b.cpp</code> 是另一个源文件，包含了 <code>a.h</code> 和 <code>const.h</code>，可以使用 <code>a.h</code> 中声明的变量和函数，以及 <code>const.h</code> 中定义的常量。</li>
+<li>文件内容：<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;a.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;const.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">process</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">static</span> <span class="type">int</span> k = <span class="number">0</span>;</span><br><span class="line">    salary = <span class="number">100</span>;</span><br><span class="line">    <span class="keyword">for</span> (...) &#123;</span><br><span class="line">        <span class="type">char</span> c;</span><br><span class="line">        <span class="comment">// 块级代码</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">show</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> x;</span><br><span class="line">    <span class="comment">// main函数体</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p><code>#include &quot;a.h&quot;</code>：包含了 <code>a.h</code>，<strong>因此可以使用 <code>a.h</code> 中声明的 <code>salary</code> 和 <code>show</code>。</strong></p>
+</li>
+<li>
+<p><code>#include &quot;const.h&quot;</code>：包含了 <code>const.h</code>，因此可以使用常量 <code>pi</code>。</p>
+</li>
+<li>
+<p><code>static int count = 0;</code>：<code>count</code> 是 <code>b.cpp</code> 文件中的静态变量，具有文件级作用域，<strong>与 <code>a.cpp</code> 文件中的 <code>count</code> 是独立的</strong>。</p>
+</li>
+<li>
+<p><code>static void process()</code>：<code>process</code> 函数在 <code>b.cpp</code> 文件中定义，具有文件级作用域，<strong>与 <code>a.cpp</code> 中的 <code>process</code> 是不同的函数。</strong></p>
+</li>
+<li>
+<p><code>process</code> 函数内部：</p>
+<ul>
+<li><code>static int k = 0;</code>：<code>k</code> 是 <code>process</code> 函数中的静态局部变量，具有块级作用域，<strong>但其值在函数调用之间保持不变</strong>。</li>
+<li><code>salary = 100;</code>：<code>salary</code> 是一个全局变量，通过 <code>extern</code> 引入，<strong>因此在 <code>b.cpp</code> 中可以修改其值</strong>。</li>
+<li><code>show();</code>：调用 <code>a.h</code> 中声明的 <code>show</code> 函数。</li>
+</ul>
+</li>
+<li>
+<p><code>void main()</code>：这是 <code>main</code> 函数的定义，程序的入口点。<code>int x;</code> 是局部变量，具有块级作用域，仅在 <code>main</code> 函数内部可见。</p>
+</li>
+</ul>
+</li>
+</ul>
+<ol start="5">
+<li><strong>作用域（Scope）</strong></li>
+</ol>
+<p>PPT中标注了几个作用域，分别是<strong>程序级</strong>、<strong>文件级</strong>、<strong>函数级</strong>和<strong>块级</strong>，解释如下：</p>
+<ul>
+<li>
+<p><strong>程序级</strong>：程序级作用域表示<strong>整个程序中都可以访问的变量或函数</strong>，例如 <strong><code>extern</code> 声明的变量和函数，以及包含在头文件中的常量</strong>。</p>
+</li>
+<li>
+<p><strong>文件级</strong>：文件级作用域表示<strong>仅在当前源文件中可见的变量或函数</strong>，例如<strong>用 <code>static</code> 修饰</strong>的 <code>count</code> 和 <code>process</code> 函数。这种作用域用于<strong>避免在多个文件中定义同名变量或函数时产生冲突</strong>。</p>
+</li>
+<li>
+<p><strong>函数级</strong>：函数级作用域指的是<strong>函数内部定义的变量或静态变量</strong>，例如 <code>process</code> 函数内的 <code>static int k</code>。</p>
+</li>
+<li>
+<p><strong>块级</strong>：块级作用域表示在代码块 <code>&#123;&#125;</code> 中定义的变量，只在该代码块内有效。例如 <code>process</code> 函数中的 <code>int i</code> 和 <code>char c</code>。</p>
+</li>
+</ul>
+<p><strong>总结</strong></p>
+<ul>
+<li><strong>头文件（Header files）</strong>：<code>a.h</code> 和 <code>const.h</code> 用于声明全局变量、常量和函数，使得不同的源文件可以共享这些声明。</li>
+<li><strong>源文件（Source files）</strong>：<code>a.cpp</code> 和 <code>b.cpp</code> 是实现文件，分别定义了各自的变量和函数，并通过 <code>static</code> 控制文件级作用域。</li>
+<li><strong>作用域的控制</strong>：通过 <code>static</code> 控制文件级作用域，通过 <code>extern</code> 引入全局变量，充分利用C++的作用域控制机制组织代码，避免冲突并提高代码的可维护性。</li>
+</ul>
+<h2 id="namespace">namespace</h2>
+<h3 id="示例-2">示例</h3>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C7/image-20241029142815805.png" class="" title="image-20241029142815805">
+<p>这张PPT讲解了C++中的**命名空间（namespace）**以及两种使用命名空间的方式：<strong>using declaration</strong> 和 <strong>using directive</strong>。此外，PPT还提到命名空间在限定作用域方面可以替代<code>static</code>。</p>
+<ol>
+<li><strong>命名空间（namespace）</strong></li>
+</ol>
+<p>命名空间是一种在C++中引入的工具，用于组织代码、避免名字冲突。当代码库变得越来越大时，<strong>不同模块之间可能会使用相同的变量名</strong>、函数名或者类名，<strong>命名空间可以帮助我们将这些名称分组，避免冲突。</strong></p>
+<p>命名空间的定义示例：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> L &#123;</span><br><span class="line">    <span class="type">int</span> k;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">int</span>)</span></span>;</span><br><span class="line">    <span class="comment">// 其他声明</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这个示例中，<code>L</code> 是命名空间的名称，命名空间 <code>L</code> 中包含了一个整数 <code>k</code> 和一个函数 <code>f(int)</code>。<strong>为了使用命名空间中的内容，C++ 提供了 <code>using declaration</code> 和 <code>using directive</code> 两种方式。</strong></p>
+<ol start="2">
+<li><strong>两种形式：declaration 和 directive</strong></li>
+</ol>
+<p>(1) Using Declaration（using 声明）</p>
+<p><code>using declaration</code> 用于<strong>引入命名空间中的特定名称</strong>。它仅将命名空间中的<strong>某个名称</strong>引入当前作用域，而<strong>不会引入整个命名空间</strong>。</p>
+<p><strong>示例：</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> L::k;</span><br><span class="line"><span class="keyword">using</span> L::f;</span><br><span class="line"></span><br><span class="line">k = <span class="number">0</span>;    <span class="comment">// 使用命名空间 L 中的变量 k</span></span><br><span class="line"><span class="built_in">f</span>(<span class="number">6</span>);     <span class="comment">// 使用命名空间 L 中的函数 f</span></span><br></pre></td></tr></table></figure>
+<p>在这个例子中，我们通过 <code>using L::k;</code> 和 <code>using L::f;</code> 分别引入了 <code>k</code> 和 <code>f</code>，因此可以直接使用 <code>k</code> 和 <code>f</code>，而不需要在前面加上 <code>L::</code>。</p>
+<p><strong>优点：</strong></p>
+<ul>
+<li><code>using declaration</code> 可以控制引入的名称，避免引入命名空间中的所有名称，从而减少命名冲突的风险。</li>
+<li>当只需要命名空间中的特定成员时，<code>using declaration</code> 是更好的选择。</li>
+</ul>
+<p>(2) Using Directive（using 指令）</p>
+<p><code>using directive</code> 是将<strong>整个命名空间引入当前作用域</strong>，它会将命名空间中的所有名称引入。</p>
+<p><strong>示例：</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> L;</span><br><span class="line"></span><br><span class="line">k = <span class="number">0</span>;    <span class="comment">// 直接使用 L 中的 k</span></span><br><span class="line"><span class="built_in">f</span>(<span class="number">6</span>);     <span class="comment">// 直接使用 L 中的 f</span></span><br></pre></td></tr></table></figure>
+<p>在这个例子中，通过 <code>using namespace L;</code>，整个命名空间 <code>L</code> 中的所有成员都可以在当前作用域中直接使用。这意味着可以直接访问 <code>L</code> 中的所有变量和函数。</p>
+<p><strong>优点和缺点：</strong></p>
+<ul>
+<li><strong>优点</strong>：简化了代码，特别是当需要频繁访问命名空间中的多个成员时。</li>
+<li><strong>缺点</strong>：可能会引入意外的命名冲突，尤其是在多个命名空间都包含相同名称的成员时。因此，<code>using directive</code> 更适合在小型文件或者局部作用域中使用，避免引入全局命名冲突。</li>
+</ul>
+<ol start="3">
+<li><strong>命名空间与<code>static</code>的替代关系</strong></li>
+</ol>
+<p>PPT中提到“在约束作用域方面，替代 <code>static</code>”。这意味着命名空间在限制符号作用域时，提供了类似 <code>static</code> 的效果。在C语言中，<strong><code>static</code> 常用于限制变量和函数的作用域，使它们只在定义的文件内部可见</strong>。但在C++中，我们可以通过命名空间和<code>using declaration</code>等特性实现更灵活的作用域控制。</p>
+<p><strong>示例：</strong></p>
+<ul>
+<li>
+<p>在C语言中，我们可能会这样写：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">int</span> count = <span class="number">0</span>;  <span class="comment">// 仅在当前文件可见</span></span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>在C++中，可以使用命名空间来实现类似效果：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> &#123;</span><br><span class="line">    <span class="type">int</span> count = <span class="number">0</span>;  <span class="comment">// 仅在当前文件可见的匿名命名空间</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>在这里，匿名命名空间（即没有名字的 <code>namespace</code>）中的 <code>count</code> 变量也只能在当前文件中使用，达到了与 <code>static</code> 类似的效果。</p>
+<ol start="4">
+<li><strong>using declaration 与 using directive 的区别</strong>
+<ul>
+<li><strong>使用范围</strong>：
+<ul>
+<li><code>using declaration</code> 仅引入命名空间中的某个特定成员，控制更精细。</li>
+<li><code>using directive</code> 引入整个命名空间的所有成员，方便但容易产生命名冲突。</li>
+</ul>
+</li>
+<li><strong>命名冲突</strong>：
+<ul>
+<li><code>using declaration</code> 仅引入指定成员，因此不容易引发命名冲突。</li>
+<li><code>using directive</code> 引入整个命名空间，若多个命名空间中有重名的成员，可能导致冲突。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>总结</strong></li>
+</ol>
+<ul>
+<li><strong>命名空间</strong>是一种用于组织代码和避免名称冲突的工具，特别是在大型项目中，可以有效管理不同模块之间的名称。</li>
+<li><strong>using declaration</strong> 和 <strong>using directive</strong> 是使用命名空间成员的两种方式：
+<ul>
+<li><code>using declaration</code> 引入命名空间中的特定成员，适合在需要精确控制名称时使用。</li>
+<li><code>using directive</code> 引入整个命名空间，适合在需要频繁访问命名空间中成员的场景。</li>
+</ul>
+</li>
+<li><strong>命名空间替代 <code>static</code></strong>：命名空间可以通过限定作用域来达到与 <code>static</code> 类似的效果，尤其是匿名命名空间，能够限制符号在文件内的可见性。</li>
+</ul>
+<h3 id="示例-3">示例</h3>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C7/image-20241029143357005.png" class="" title="image-20241029143357005">
+<p>这张PPT深入讲解了C++命名空间的高级特性，包括<strong>别名</strong>、<strong>全局</strong>、<strong>开放</strong>、<strong>可嵌套</strong>和<strong>重载</strong>。</p>
+<ol>
+<li><strong>别名（Alias）</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>定义别名</strong>：命名空间别名是对现有命名空间的一个新的简写。通过给长命名空间名称创建别名，可以让代码更简洁。</p>
+</li>
+<li>
+<p><strong>示例</strong>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> American_Telephone_and_Telegraph &#123;</span><br><span class="line">    <span class="comment">// 一些定义</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> ATT = American_Telephone_and_Telegraph;</span><br></pre></td></tr></table></figure>
+<p>在这里，<code>ATT</code> 是 <code>American_Telephone_and_Telegraph</code> 命名空间的别名。这种别名简化了对命名空间的引用，例如<strong>可以直接使用 <code>ATT::function()</code> 来调用 <code>American_Telephone_and_Telegraph::function()</code>。</strong></p>
+</li>
+</ul>
+<ol start="2">
+<li><strong>全局（Global）</strong></li>
+</ol>
+<ul>
+<li>
+<p>在C++中，<code>::</code>（全局作用域运算符）可以用于引用全局命名空间中的变量或函数，以避免与其他命名空间中的名称冲突。</p>
+</li>
+<li>
+<p><strong>示例</strong>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a = <span class="number">5</span>;       <span class="comment">// 全局变量 a</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> X &#123;</span><br><span class="line">    <span class="type">int</span> a = <span class="number">10</span>;  <span class="comment">// 命名空间 X 内的变量 a</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> a = <span class="number">20</span>;</span><br><span class="line">    ::a++;      <span class="comment">// 引用全局的 a，值变为 6</span></span><br><span class="line">    X::a++;     <span class="comment">// 引用命名空间 X 中的 a，值变为 11</span></span><br><span class="line">    a++;        <span class="comment">// 引用本地变量 a，值变为 21</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 <code>f</code> 函数中，<strong><code>::a</code> 访问全局变量</strong>，<code>X::a</code> 访问命名空间 <code>X</code> 内的 <code>a</code>，而 <code>a</code> 则是局部变量。</p>
+</li>
+</ul>
+<ol start="3">
+<li><strong>开放（Open）</strong></li>
+</ol>
+<ul>
+<li>
+<p>命名空间是开放的，意味着<strong>可以在多个位置对同一个命名空间添加内容</strong>。可以在不同的源文件中继续添加到同一个命名空间中，以便组织代码。</p>
+</li>
+<li>
+<p><strong>示例</strong>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> A &#123;</span><br><span class="line">    <span class="type">int</span> x = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> A &#123;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        x++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这里，<code>namespace A</code> 在两个不同的代码块中定义，并在第二个代码块中为命名空间 <code>A</code> 添加了函数 <code>f</code>。</p>
+</li>
+</ul>
+<ol start="4">
+<li><strong>可嵌套（Nested）</strong></li>
+</ol>
+<ul>
+<li>
+<p>命名空间可以嵌套使用，即<strong>在一个命名空间内定义另一个命名空间</strong>。这种方式可以用于更细粒度地组织代码结构。</p>
+</li>
+<li>
+<p><strong>示例</strong>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> L1 &#123;</span><br><span class="line">    <span class="type">int</span> a;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">namespace</span> L2 &#123;</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="comment">// 在 L2 中定义函数 f</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这里，<code>L1</code> 是外层命名空间，<code>L2</code> 是 <code>L1</code> 的嵌套命名空间。<code>L2::f()</code> 可以通过 <code>L1::L2::f()</code> 调用。</p>
+<p><strong>使用嵌套命名空间</strong>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">L1::L2::<span class="built_in">f</span>(); <span class="comment">// 直接调用 L2 中的 f 函数</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ol start="5">
+<li><strong>重载（Overloading）</strong></li>
+</ol>
+<ul>
+<li>
+<p>不同命名空间中的函数可以具有相同的名字，这样即使在不同的命名空间中定义了相同的函数名，也不会产生冲突。</p>
+</li>
+<li>
+<p><strong>示例</strong>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> B &#123;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">int</span>)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> A &#123;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="type">char</span>)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> B;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> A;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">g</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">f</span>(<span class="string">&#x27;1&#x27;</span>);  <span class="comment">// 调用 A::f(char)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这个例子中，<code>A</code> 和 <code>B</code> 命名空间中都定义了 <code>f</code> 函数，参数类型不同。在 <code>g</code> 函数中，调用 <code>f('1')</code> 会选择合适的重载，即 <code>A::f(char)</code>。</p>
+<p><strong>注意</strong>：PPT中有一个红色的叉号，表明<strong>不建议在同一作用域内多次使用 <code>using-directive</code></strong>。这是因为这样可能导致命名冲突和意外的行为。</p>
+</li>
+</ul>
+<ol start="6">
+<li><strong>PPT总结</strong></li>
+</ol>
+<p>PPT列出了命名空间的几个重要特性，并给出了一些高级用法建议：</p>
+<ul>
+<li><strong>别名</strong>：可以为命名空间设置别名，使长名称更加简洁。</li>
+<li><strong>全局</strong>：<code>::</code> 运算符可以用于访问全局命名空间中的成员，避免与局部或其他命名空间中的名称冲突。</li>
+<li><strong>开放</strong>：命名空间是开放的，可以在不同位置添加内容，方便组织代码。</li>
+<li><strong>可嵌套</strong>：命名空间可以嵌套，便于更好地划分代码结构。</li>
+<li><strong>重载</strong>：不同命名空间中的函数可以重载，但在同一作用域内避免多次使用 <code>using-directive</code> 以防止冲突。</li>
+</ul>
+<h3 id="示例-4">示例</h3>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C7/image-20241029144106940.png" class="" title="image-20241029144106940">
+<p>这张PPT展示了一个关于C++中命名空间使用的简单示例，并建议在使用命名空间时<strong>优先考虑 using-declaration</strong>。</p>
+<ol>
+<li><strong>简单示例</strong></li>
+</ol>
+<p>代码展示了一个简单的<code>main</code>函数，用来打印 “hello, world”。在C++中，这种标准库函数（如<code>printf</code>）通常定义在<code>namespace std</code>命名空间中。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;hello, world\n&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在C++中，如果没有<code>using</code>语句，则需要在调用标准库中的函数时使用<code>std</code>命名空间前缀。例如，<code>std::printf(&quot;hello, world\n&quot;);</code>。这确保了<code>printf</code>来自标准命名空间，避免与用户自定义的函数重名。</p>
+<ol start="2">
+<li><strong>&lt;stdio.h&gt; 和命名空间 std</strong></li>
+</ol>
+<p>在C++标准库中，所有标准库的符号都位于<code>std</code>命名空间内，以防止命名冲突。<code>&lt;stdio.h&gt;</code>是C标准库中的头文件，定义了像<code>printf</code>这样的标准输入输出函数。虽然<code>&lt;stdio.h&gt;</code>是C的头文件，但在C++中，我们通常将其视为<code>&lt;cstdio&gt;</code>，并放入<code>std</code>命名空间中。</p>
+<ul>
+<li>其中为什么在调用<code>#include &lt;stdio.h&gt;</code>时不需要using namespace std呢？因为在C的.h文件中默认添加了using namespace std;</li>
+</ul>
+<ol start="3">
+<li><strong>优先考虑 using-declaration</strong></li>
+</ol>
+<p>PPT建议在C++中优先考虑 <strong>using-declaration</strong>，即显式引入命名空间中的某个特定成员，而不是引入整个命名空间。这样可以减少命名冲突的风险。</p>
+<ol start="4">
+<li>
+<p>参考：</p>
+<ol>
+<li>
+<p>确实有必要澄清这个问题。在调用 <code>#include &lt;stdio.h&gt;</code> 时，不需要使用 <code>using namespace std;</code>，主要原因是：</p>
+<ol>
+<li>C 标准库头文件的兼容性</li>
+</ol>
+<p>C++ 中的 <code>&lt;stdio.h&gt;</code> 是从 C 标准库继承而来，但它的内容不在 <code>std</code> 命名空间中。传统 C 头文件（如 <code>&lt;stdio.h&gt;</code>、<code>&lt;stdlib.h&gt;</code> 等）并不包含在 <code>std</code> 命名空间下，因为它们是直接从 C 语言标准库引入的，C 标准库并没有使用 C++ 的命名空间机制。因此，在 C++ 中直接使用 <code>&lt;stdio.h&gt;</code> 提供的 <code>printf</code> 等函数，不需要 <code>std</code> 前缀，也不需要 <code>using namespace std;</code>。</p>
+<ol start="2">
+<li>C++ 的 C 标准库头文件（<code>&lt;cstdio&gt;</code>）</li>
+</ol>
+<p>为了更符合 C++ 的命名空间管理，C++ 标准库提供了 C 标准库头文件的 C++ 版本，如 <code>&lt;cstdio&gt;</code> 对应于 <code>&lt;stdio.h&gt;</code>，<code>&lt;cstdlib&gt;</code> 对应于 <code>&lt;stdlib.h&gt;</code> 等。这些 C++ 版本的头文件会将 C 标准库的符号放入 <code>std</code> 命名空间中。因此，如果在 C++ 中包含 <code>&lt;cstdio&gt;</code> 而不是 <code>&lt;stdio.h&gt;</code>，就需要使用 <code>std::printf</code> 或者 <code>using std::printf;</code>。</p>
+<ol start="3">
+<li>总结</li>
+</ol>
+<ul>
+<li><strong><code>#include &lt;stdio.h&gt;</code></strong>：直接包含传统的 C 头文件，<code>printf</code> 位于全局命名空间，无需 <code>std</code> 前缀。</li>
+<li><strong><code>#include &lt;cstdio&gt;</code></strong>：包含 C++ 版本的头文件，C 标准库中的符号会被放入 <code>std</code> 命名空间中，需要使用 <code>std::printf</code> 或 <code>using std::printf;</code>。</li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="编译预处理">编译预处理</h2>
+<h3 id="示例-5">示例</h3>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C7/image-20241029151204519.png" class="" title="image-20241029151204519">
+<p>这张PPT主要讨论了C++中的编译预处理（Preprocessing）和编译指令替换的概念，并结合了一个代码示例，展示了如何通过预定义宏来替换函数的行为。</p>
+<ol>
+<li><strong>编译预处理（Preprocessing）</strong></li>
+</ol>
+<p>编译预处理是在C/C++编译器真正编译代码之前的一个阶段，负责处理<strong>头文件包含、宏定义、条件编译</strong>等内容。PPT中的“编译预处理”就是指<strong>在编译过程中可以用宏定义和其他预处理指令来调整代码</strong>的编译方式。</p>
+<ul>
+<li>
+<p><strong>代码示例</strong>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="type">double</span> <span class="title">sqrt</span><span class="params">(<span class="type">double</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;The square root of 2 is %g\n&quot;</span>, <span class="built_in">sqrt</span>(<span class="number">2</span>));</span><br><span class="line">    <span class="built_in">fflush</span>(stdout);</span><br><span class="line">    <span class="keyword">return</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个代码片段中，<code>extern double sqrt(double);</code> 是一个外部函数声明，表示我们希望使用外部库中的 <code>sqrt</code> 函数来计算平方根。同时使用了<code>printf</code>来输出结果。</p>
+</li>
+</ul>
+<ol start="2">
+<li><strong>示例输出和替换效果</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>正常情况输出</strong>：<br>
+正常编译时，<code>sqrt(2)</code> 会返回 2 的平方根 <code>1.41421</code>，并输出 <code>The square root of 2 is 1.41421</code>。这个输出展示了正确的 <code>sqrt</code> 函数的行为。</p>
+</li>
+<li>
+<p><strong>使用宏替换</strong>：<br>
+PPT中给出的编译命令行参数：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -7 -Dsqrt=rand -Dreturn=<span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+<p>这里通过<code>-D</code>选项定义了两个宏替换规则：</p>
+<ul>
+<li><code>-Dsqrt=rand</code>：将<code>sqrt</code>函数替换为<code>rand</code>函数。这意味着代码中的<code>sqrt(2)</code>会被替换成<code>rand()</code>，即随机数生成函数。<code>rand</code>函数返回一个伪随机整数，导致输出的结果不再是 2 的平方根，而是一个随机值。</li>
+<li><code>-Dreturn=exit</code>：将<code>return</code>语句替换为<code>exit</code>函数。这意味着<code>return(0)</code>会被替换为<code>exit(0)</code>，程序将在执行到<code>exit</code>时立即终止，而不返回到调用者。</li>
+</ul>
+<p><strong>替换后可能的输出</strong>：<br>
+替换后可能会输出一个随机数，形如 <code>The square root of 2 is 6.93232e-310</code>（实际数值会根据 <code>rand</code> 的返回值有所不同），这并非正确的平方根结果，而是<code>rand</code>函数产生的随机数。</p>
+</li>
+</ul>
+<ol start="3">
+<li><strong>与作用域、类型和接口不兼容</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>潜伏于环境</strong>：<br>
+PPT中提到“潜伏于环境”指的是宏替换会在代码中进行“静态文本替换”，而不考虑代码的作用域、类型检查或函数接口。因此，宏替换可能会潜在地影响程序的环境，使代码变得难以理解和维护。例如，<code>sqrt</code>被替换为<code>rand</code>后，<code>sqrt(2)</code>实际上调用了一个不需要参数的随机数生成函数<code>rand</code>，导致了潜在的错误行为。</p>
+</li>
+<li>
+<p><strong>穿透作用域</strong>：<br>
+宏替换在编译预处理阶段进行，因此它不受作用域的限制。在整个编译单元中，所有出现的<code>sqrt</code>和<code>return</code>都会被替换，无论它们出现在何处。这种“全局”替换可能会导致意料之外的副作用。例如，如果代码中有多个文件，并且它们都包含了<code>sqrt</code>函数的使用，<code>-Dsqrt=rand</code>将会影响所有包含此符号的地方，可能导致错误。</p>
+</li>
+</ul>
+<ol start="4">
+<li><strong>设想和置换的应用</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>应用场景</strong>：<br>
+使用宏替换时可以实现一些应用场景的功能调整，例如通过宏定义控制调试模式和发布模式，或通过宏定义来决定是调用某个库的API还是模拟实现。</p>
+</li>
+<li>
+<p><strong>替换的风险</strong>：<br>
+尽管宏替换提供了一定的灵活性，但这种方式容易出错，且难以维护，特别是在复杂的代码库中。宏替换不具备类型检查能力，编译器只会做字面替换，这可能导致程序运行时行为不符合预期。</p>
+</li>
+</ul>
+<ol start="5">
+<li><strong>总结</strong></li>
+</ol>
+<ul>
+<li><strong>宏替换</strong>可以让程序在编译时进行符号替换，使得代码在不同环境下实现不同的行为。</li>
+<li><strong>风险</strong>：由于宏替换无视作用域和类型信息，它可能会影响程序的全局环境，容易引入难以调试的错误。因此，在实际应用中，使用宏替换应谨慎，尽量避免对核心函数或关键语句的替换，以防影响代码的可读性和可维护性。</li>
+<li><strong>现代替代</strong>：在现代C++中，更推荐使用 <code>constexpr</code>、<code>inline functions</code> 或模板等具有类型检查的特性来替代宏替换，以保证代码的健壮性和可维护性。</li>
+</ul>
+<h2 id="预处理指令">预处理指令</h2>
+<h3 id="示例-6">示例</h3>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C7/image-20241029151846103.png" class="" title="image-20241029151846103">
+<p>这张PPT介绍了C++中的几种预处理指令（preprocessor directives），包括 <code>#include</code>、<code>#define</code>、<code>#ifdef</code>、<code>#pragma</code> 等。还展示了一些相关的用法和代码示例，展示了这些指令在代码组织、宏定义、条件编译和编译器指示方面的作用。</p>
+<ol>
+<li><strong>#include</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>功能</strong>：<code>#include</code> 指令用于将其他文件的内容包含到当前文件中。它通常用于引入头文件，使接口定义（如函数和变量声明）在当前文件中可用。</p>
+</li>
+<li>
+<p><strong>作用</strong>：</p>
+<ul>
+<li><strong>Make interface definitions available</strong>：通过包含头文件，可以在当前文件中使用头文件中声明的接口（如函数、变量等）。</li>
+<li><strong>Compose source text</strong>：编译器在预处理阶段<strong>会将包含的文件内容直接插入到 <code>#include</code> 语句所在的位置</strong>。</li>
+</ul>
+</li>
+<li>
+<p><strong>示例</strong>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span>  <span class="comment">// 包含标准输入输出流库</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;myheader.h&quot;</span> <span class="comment">// 包含自定义的头文件</span></span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ol start="2">
+<li><strong>#define</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>功能</strong>：<code>#define</code> 指令用于定义宏。这种宏替换机制可以用于定义常量、<strong>简单的代码片段</strong>，甚至可以实现一些复杂的操作，如拼接和字符串化操作。</p>
+</li>
+<li>
+<p><strong>用法</strong>：</p>
+<ul>
+<li>
+<p><strong>Symbolic constants</strong>：可以用 <code>#define</code> 定义符号常量，将数值或字符串赋给一个符号名称，避免在代码中直接使用“魔法数字”，提高可读性。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> PI 3.14159</span></span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p><strong>Open subroutines</strong>：可以用 <code>#define</code> 实现简单的代码片段或内联函数，比如通过宏定义一个求平方的操作。宏替换不进行参数类型检查，但可以减少函数调用的开销。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> SQUARE(x) ((x) * (x))</span></span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p><strong>Generic subroutines</strong>：宏可以创建通用的子程序，不限定类型。例如，<code>SQUARE(x)</code> 可以用于不同类型的变量（<code>int</code>、<code>double</code>等）。</p>
+</li>
+<li>
+<p><strong>Generic “types”</strong>：通过宏定义，可以使用通用类型名称来代替具体的类型。例如，可以定义一个 <code>#define INTEGER int</code>，使得代码中可以使用 <code>INTEGER</code> 来表示 <code>int</code>。</p>
+</li>
+<li>
+<p><strong>Renaming</strong>：使用宏可以为现有的变量、类型或函数起别名。例如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> LENGTH 100</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> WIDTH LENGTH</span></span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p><strong>String concatenation</strong>：在宏中使用 <code>##</code> 可以将两个标识符拼接在一起。例如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> FUNC(x, y) x##y</span></span><br><span class="line"><span class="built_in">FUNC</span>(hello, world);  <span class="comment">// 等价于 helloworld</span></span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p><strong>Special purpose syntax</strong>：有些宏可以包含特殊用途的语法，比如用于调试信息的打印、日志记录等，这些特定用途的语法可以通过宏进行定义和替换，来控制调试输出或其他辅助功能。</p>
+</li>
+<li>
+<p><strong>General macro processing</strong>：宏定义提供了一个通用的预处理工具，可以在代码编译之前对代码进行文本级的处理，例如字符串拼接、条件编译等。宏处理没有类型检查的限制，灵活但容易产生意外错误。</p>
+</li>
+</ul>
+</li>
+</ul>
+<ol start="3">
+<li>字符串拼接</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> Func(x, y) x##y</span></span><br><span class="line"><span class="built_in">Func</span>(my, _func)();  <span class="comment">// 结果为调用 my_func()</span></span><br></pre></td></tr></table></figure>
+<p><strong>详细解释</strong>：</p>
+<ul>
+<li><code>#define Conn(x, y) x##y</code>：使用 <code>##</code> 操作符连接两个标识符。例如，<code>Conn(my, func)</code> 会生成 <code>myfunc</code>。</li>
+<li><code>#define ToString(x) #x</code>：使用 <code>#</code> 操作符将参数转换为字符串，例如 <code>ToString(123)</code> 会生成字符串 <code>&quot;123&quot;</code>。</li>
+<li><code>#define ToChar(x) #@x</code>：这是一个非标准写法，在标准C++中不存在 <code>#@</code> 这样的操作符。一般的字符串化操作使用 <code>#</code> 就可以。</li>
+</ul>
+<ol start="4">
+<li><strong>#ifdef</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>功能</strong>：<code>#ifdef</code> 和 <code>#ifndef</code> 是条件编译指令，用于判断某个宏是否被定义。</p>
+</li>
+<li>
+<p><strong>作用</strong>：</p>
+<ul>
+<li><strong>Version control</strong>：可以根据宏的定义情况控制不同的代码版本。例如，可以为不同的平台或编译器配置不同的代码。</li>
+<li><strong>Commenting out code</strong>：可以通过条件编译“注释”掉一部分代码，而不需要真正移除它。</li>
+</ul>
+</li>
+<li>
+<p><strong>示例</strong>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifdef</span> DEBUG</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> LOG(x) std::cout &lt;&lt; x &lt;&lt; std::endl</span></span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> LOG(x)</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<p>在这个示例中，如果定义了 <code>DEBUG</code>，那么 <code>LOG(x)</code> 会输出内容；否则，<code>LOG(x)</code> 会被替换为空操作。</p>
+</li>
+</ul>
+<ol start="4">
+<li><strong>#pragma</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>功能</strong>：<code>#pragma</code> 是一种提供给编译器的指示，可以控制编译器的特定行为。不同的编译器支持不同的 <code>#pragma</code> 指令。</p>
+</li>
+<li>
+<p><strong>作用</strong>：</p>
+<ul>
+<li><strong>Control of layout</strong>：可以控制内存布局或数据对齐方式。</li>
+<li><strong>Informing the compiler</strong>：可以用来向编译器传达一些信息，比如禁用某些警告或进行优化。</li>
+</ul>
+</li>
+<li>
+<p><strong>示例</strong>：</p>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">pragma</span> pack(push, 1)</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">MyStruct</span> &#123;</span><br><span class="line">    <span class="type">char</span> a;</span><br><span class="line">    <span class="type">int</span> b;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> pack(pop)</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">pragma</span> once  <span class="comment">// 防止头文件被重复包含</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">pragma</span> <span class="keyword">warning</span>(disable: 4996)  <span class="comment">// 禁用特定的编译警告</span></span></span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li><strong>const, inline, template, namespace</strong></li>
+</ol>
+<p>这些关键字并不是预处理指令，但在PPT中列出，表明它们可以在代码结构设计中与预处理指令相配合使用。</p>
+<ul>
+<li><strong>const</strong>：用于定义常量，替代 <code>#define</code> 定义的常量，更加安全，具有类型检查功能。</li>
+<li><strong>inline</strong>：用于提示编译器将函数内联化，避免函数调用开销。</li>
+<li><strong>template</strong>：用于创建泛型函数或类，以便在不同类型上复用代码。</li>
+<li><strong>namespace</strong>：用于组织代码，避免名字冲突。</li>
+</ul>
+<p>总结</p>
+<ul>
+<li><strong>#include</strong>：用于包含文件，使接口定义可用。</li>
+<li><strong>#define</strong>：定义宏，用于常量、简单代码段、拼接、字符串化等。</li>
+<li><strong>#ifdef</strong>：条件编译，控制代码的编译版本。</li>
+<li><strong>#pragma</strong>：向编译器提供指示，控制特定编译行为。</li>
+</ul>
+<h2 id="宏">宏</h2>
+<h3 id="示例-7">示例</h3>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C7/image-20241029154328358.png" class="" title="image-20241029154328358">
+<p>这张PPT展示了C++中的宏定义使用示例。我们看到两个宏 <code>ARRAY_SIZE</code> 和 <code>FOR_EACH</code>，并展示了如何使用宏来遍历数组中的每一个元素。下面是对PPT中每个部分的详细解释。</p>
+<ol>
+<li><strong>宏 <code>ARRAY_SIZE</code></strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>定义</strong>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))</span></span><br></pre></td></tr></table></figure>
+<p>这个宏用于计算数组的元素个数。它通过计算数组的总字节大小 <code>sizeof(arr)</code>，然后除以单个元素的字节大小 <code>sizeof(arr[0])</code> 来得到数组的大小。</p>
+</li>
+<li>
+<p><strong>工作原理</strong>：<br>
+假设有一个数组 <code>int arr[5];</code>，<code>sizeof(arr)</code> 返回整个数组的字节大小（假设每个 <code>int</code> 为4字节，则 <code>sizeof(arr) = 20</code> 字节），<code>sizeof(arr[0])</code> 返回单个元素的字节大小（4字节）。因此，<code>ARRAY_SIZE(arr)</code> 的结果为 <code>20 / 4 = 5</code>，即数组中元素的个数。</p>
+</li>
+<li>
+<p><strong>注意事项</strong>：</p>
+<ul>
+<li>该宏只能用于“真正的”数组类型，不能用于指针类型。因为 <strong><code>sizeof(arr)</code> 在数组和指针上返回的结果不同</strong>：数组返回整个数组的大小，而指针仅返回指针自身的大小（通常为4或8字节）。</li>
+</ul>
+</li>
+</ul>
+<ol start="2">
+<li><strong>宏 <code>FOR_EACH</code></strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>定义</strong>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> FOR_EACH(arr, fn) do &#123; \</span></span><br><span class="line"><span class="meta">    for (int i = 0; i &lt; ARRAY_SIZE(arr); i++) &#123; \</span></span><br><span class="line"><span class="meta">        (fn)(arr[i]); \</span></span><br><span class="line"><span class="meta">    &#125; \</span></span><br><span class="line"><span class="meta">&#125; while (0)</span></span><br></pre></td></tr></table></figure>
+<p>这个宏用于遍历数组 <code>arr</code> 中的每一个元素，并对每个元素应用函数 <code>fn</code>。</p>
+</li>
+<li>
+<p><strong>工作原理</strong>：<br>
+<code>FOR_EACH</code> 宏定义了一个 <code>for</code> 循环，从 <code>i = 0</code> 开始遍历数组 <code>arr</code>。每次循环中调用 <code>(fn)(arr[i])</code>，将数组的第 <code>i</code> 个元素作为参数传递给函数 <code>fn</code>。这个宏利用了 <code>ARRAY_SIZE</code> 来获取数组的大小，确保遍历所有元素。</p>
+</li>
+<li>
+<p><strong>多行宏的实现</strong>：<br>
+宏定义中使用了反斜杠 <code>\</code> 来表示换行符，这样可以将宏定义分布在多行中，增加可读性。</p>
+<ul>
+<li><code>do &#123; ... &#125; while (0)</code>：这是一个<strong>常见的宏模式，用于确保宏语句在用作单独语句块时不会引起语法问题</strong>。这样一来，无论宏在何处使用，都不会影响代码的结构完整性。</li>
+</ul>
+</li>
+<li>
+<p><strong>应用示例</strong>：<br>
+假设 <code>arr</code> 是一个整数数组，<code>fn</code> 是一个打印函数 <code>print_int</code>，<code>FOR_EACH(arr, print_int);</code> 会遍历数组 <code>arr</code> 的每个元素并打印它们。</p>
+</li>
+</ul>
+<ol start="3">
+<li><strong>函数 <code>print_int</code></strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>定义</strong>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">print_int</span><span class="params">(<span class="type">const</span> <span class="type">int</span> i)</span> </span>&#123;</span><br><span class="line">    cout &lt;&lt; i &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这是一个简单的打印函数，用于打印传入的整数 <code>i</code>，并换行。</p>
+</li>
+<li>
+<p><strong>作用</strong>：<br>
+这个函数作为 <code>FOR_EACH</code> 宏的参数 <code>fn</code>，在遍历数组时对每个元素调用 <code>print_int</code>，从而实现数组中所有元素的打印。</p>
+</li>
+</ul>
+<ol start="4">
+<li><strong>主函数 <code>main</code></strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>定义</strong>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> arr[<span class="number">1</span>];</span><br><span class="line">    <span class="built_in">FOR_EACH</span>(arr, print_int);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>主函数中定义了一个数组 <code>arr</code>，包含一个整数元素。通过 <code>FOR_EACH(arr, print_int);</code> 宏调用，将 <code>arr</code> 数组的每个元素传入 <code>print_int</code> 函数打印出来。</p>
+</li>
+<li>
+<p><strong>作用</strong>：<br>
+这个主函数展示了 <code>FOR_EACH</code> 宏的用法。宏 <code>FOR_EACH</code> 遍历数组 <code>arr</code> 的每个元素，并调用 <code>print_int</code> 打印元素的值。</p>
+</li>
+</ul>
+<ol start="5">
+<li><strong>整体流程总结</strong></li>
+</ol>
+<ul>
+<li><strong>ARRAY_SIZE</strong>：用于计算数组的大小，确保 <code>FOR_EACH</code> 宏能够正确地遍历数组的每一个元素。</li>
+<li><strong>FOR_EACH</strong>：一个用于遍历数组的通用宏，它接受一个数组和一个函数作为参数，并将数组中的每个元素传递给函数。</li>
+<li><strong>print_int</strong>：一个简单的打印函数，用于 <code>FOR_EACH</code> 宏的示例。</li>
+<li><strong>main</strong>：演示了如何使用 <code>FOR_EACH</code> 宏来遍历数组并打印每个元素。</li>
+</ul>
+<h3 id="示例-8">示例</h3>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C7/image-20241029160651480.png" class="" title="image-20241029160651480">
+<p>这张PPT主要展示了C/C++中预处理器的条件编译指令和一些预定义的宏。</p>
+<ol>
+<li><strong>预定义宏</strong></li>
+</ol>
+<p>在C/C++中，编译器提供了一些<strong>预定义宏</strong>，用于<strong>获取编译器或当前文件的相关信息</strong>，这些宏在<strong>程序编译时会自动展开</strong>，<strong>不需要显式定义</strong>。这些预定义宏包括：</p>
+<ul>
+<li><strong><code>__FILE__</code></strong>：表示当前文件的名称。</li>
+<li><strong><code>__LINE__</code></strong>：表示当前行号。</li>
+<li><strong><code>__DATE__</code></strong>：表示当前的编译日期。</li>
+<li><strong><code>__TIME__</code></strong>：表示当前的编译时间。</li>
+<li><strong><code>__STDC__</code></strong>：如果编译器遵循ANSI标准C，则定义该宏。一般用于判断代码是否符合标准C。</li>
+<li><strong><code>__COUNTER__</code></strong>：一个递增的整型值，每使用一次这个宏，值都会增加。通常用于生成唯一的标识符。</li>
+<li><strong><code>__INCLUDE_LEVEL__</code></strong>：表示当前文件被嵌套包含的级别。每次 <code>#include</code> 会增加这个值，用于调试文件包含的层次结构。</li>
+</ul>
+<p>这些预定义宏可以帮助开发者在代码中加入调试信息，记录文件、行号、时间等信息，方便定位问题和追踪代码执行。</p>
+<ol start="2">
+<li><strong>条件编译示例</strong></li>
+</ol>
+<p>上半部分的代码展示了条件编译的用法，通过预处理指令 <code>#ifdef</code>、<code>#ifndef</code>、<code>#if</code>、<code>#elif</code>、<code>#else</code>、<code>#endif</code> 等控制代码的编译流程。这些指令允许开发者根据不同的条件来选择性地编译部分代码，特别适合于多平台、多版本的代码。</p>
+<p><strong>代码示例</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> MY_PRINTF_VERSION</span></span><br><span class="line">    <span class="meta">#<span class="keyword">define</span> MY_PRINTF_VERSION 1</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> MY_PRINTF_VERSION == 1</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">printf</span><span class="params">(<span class="type">char</span>* str)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 实现版本1</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="keyword">elif</span> MY_PRINTF_VERSION == 2</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">printf</span><span class="params">(<span class="type">char</span>* fmt, <span class="type">char</span>* args, ...)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 实现版本2</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p><strong>解释</strong>：</p>
+<ul>
+<li><code>#ifndef MY_PRINTF_VERSION</code>：检查是否未定义宏 <code>MY_PRINTF_VERSION</code>。如果未定义，则定义它并将其值设为 <code>1</code>。</li>
+<li><code>#if MY_PRINTF_VERSION == 1</code>：检查 <code>MY_PRINTF_VERSION</code> 是否等于 <code>1</code>，如果是，则编译第一个 <code>printf</code> 版本。</li>
+<li><code>#elif MY_PRINTF_VERSION == 2</code>：如果 <code>MY_PRINTF_VERSION</code> 等于 <code>2</code>，则编译第二个 <code>printf</code> 版本。</li>
+<li><code>#endif</code>：结束条件编译。</li>
+</ul>
+</li>
+<li>
+<p><strong>用途</strong>：这种条件编译方式允许开发者定义不同版本的 <code>printf</code> 函数，可以根据 <code>MY_PRINTF_VERSION</code> 的值选择不同的实现。这在需要兼容多个版本的函数或特性时非常有用。</p>
+</li>
+</ul>
+<ol start="3">
+<li><strong>预处理指令</strong></li>
+</ol>
+<ul>
+<li><strong>#ifdef 和 #ifndef</strong>：用于条件编译。<code>#ifdef</code> 检查一个宏是否已定义，<code>#ifndef</code> 则检查宏是否未定义。常用于版本控制和代码屏蔽。</li>
+</ul>
+<ol start="4">
+<li><strong>IDE</strong></li>
+</ol>
+<ul>
+<li>可以在IDE里用上面这些预定义宏进行详细debug，可以精确到行，时间等</li>
+</ul>
+<h2 id="泛型编程（template）">泛型编程（template）</h2>
+<h3 id="示例-9">示例</h3>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C7/image-20241029161232170.png" class="" title="image-20241029161232170">
+<p>这张PPT概述了**泛型编程（Generic Programming）**的核心特点及其应用领域。泛型编程是一种编程范式，强调代码的通用性和复用性，特别在算法和数据结构的设计中得到广泛应用。</p>
+<ol>
+<li><strong>Reusable（可复用）</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>含义</strong>：泛型编程的一个重要目标是实现代码的复用性。通过定义具有通用性的数据结构和算法，代码可以在不同的场景中重用，而不需要进行修改。</p>
+</li>
+<li>
+<p><strong>示例</strong>：C++中的模板（templates）就是泛型编程的一种实现方式。例如，<code>std::vector</code> 是一个通用的容器类模板，它可以存储任意类型的元素，不需要为每种类型分别定义一个新的容器。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;<span class="type">int</span>&gt; intVec;      <span class="comment">// 存储整数的向量</span></span><br><span class="line">std::vector&lt;<span class="type">double</span>&gt; doubleVec; <span class="comment">// 存储双精度数的向量</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ol start="2">
+<li><strong>Type-safe（类型安全）</strong></li>
+</ol>
+<ul>
+<li><strong>含义</strong>：泛型编程还强调类型安全，这意味着编译器可以在编译阶段检查类型是否匹配，从而减少运行时错误。与传统的使用<code>void*</code>的通用指针不同，泛型编程允许在保持类型安全的同时实现代码的通用性。</li>
+<li><strong>示例</strong>：在C++中，通过模板类或模板函数，编译器可以在实例化模板时确保类型的正确性。如果类型不匹配，编译器会报错。<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function">T <span class="title">add</span><span class="params">(T a, T b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> result = <span class="built_in">add</span>(<span class="number">3</span>, <span class="number">5</span>);        <span class="comment">// 类型安全，正确</span></span><br><span class="line"><span class="type">double</span> dResult = <span class="built_in">add</span>(<span class="number">2.5</span>, <span class="number">3.5</span>); <span class="comment">// 类型安全，正确</span></span><br><span class="line"><span class="comment">// add(2, 2.5); // 如果不支持类型转换，会导致编译错误</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ol start="3">
+<li><strong>Algorithm（算法）</strong></li>
+</ol>
+<ul>
+<li><strong>作用</strong>：泛型编程通常应用于算法设计。通过定义通用的算法模板，可以实现对不同类型的数据进行操作，而不必重写相同逻辑的代码。</li>
+<li><strong>示例</strong>：C++标准库中的算法，如 <code>std::sort</code>、<code>std::find</code> 等都是泛型算法，它们可以作用于任意类型的容器上，不限定数据的具体类型。<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line">std::vector&lt;<span class="type">int</span>&gt; v = &#123;<span class="number">4</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">1</span>&#125;;</span><br><span class="line">std::<span class="built_in">sort</span>(v.<span class="built_in">begin</span>(), v.<span class="built_in">end</span>()); <span class="comment">// 泛型排序算法，可用于任意支持排序的类型</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ol start="4">
+<li><strong>Data Structure（数据结构）</strong></li>
+</ol>
+<ul>
+<li>
+<p><strong>作用</strong>：泛型编程在数据结构设计中也有广泛应用。通过定义泛型的数据结构，可以支持存储不同类型的数据，而不需要为每种类型实现不同的结构。</p>
+</li>
+<li>
+<p><strong>示例</strong>：C++的标准模板库（STL）中的 <code>std::vector</code>、<code>std::list</code>、<code>std::map</code> 等数据结构都是泛型数据结构。它们可以存储任意类型的数据。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;<span class="type">int</span>&gt; intVector;    <span class="comment">// 存储整数</span></span><br><span class="line">std::vector&lt;std::string&gt; strVector; <span class="comment">// 存储字符串</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="示例-10">示例</h3>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C7/image-20241029162149076.png" class="" title="image-20241029162149076">
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C7/image-20241029162155250.png" class="" title="image-20241029162155250">
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C7/image-20241029162203563.png" class="" title="image-20241029162203563">
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C7/image-20241029162231458.png" class="" title="image-20241029162231458">
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C7/image-20241029162238671.png" class="" title="image-20241029162238671">
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/01/25/C7/image-20241029162244301.png" class="" title="image-20241029162244301">
+<p>好的，我可以直接访问您上传的图片。让我为您详细解释每一张PPT内容。</p>
+<hr>
+<h3 id="第一张PPT">第一张PPT</h3>
+<h4 id="内容：">内容：</h4>
+<p>第一张PPT展示了使用C宏定义和结构体来创建一个通用的栈（Stack）结构，以支持不同的数据类型。具体实现如下：</p>
+<ol>
+<li>
+<p><strong>宏 <code>CREATE_STACK(T)</code></strong>：通过宏定义的方式创建一个特定类型的栈，<code>T</code> 代表数据类型。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> CREATE_STACK(T) \</span></span><br><span class="line"><span class="meta">typedef struct Stack_##T &#123; \</span></span><br><span class="line"><span class="meta">    T* array; \</span></span><br><span class="line"><span class="meta">    int capacity; \</span></span><br><span class="line"><span class="meta">    int top; \</span></span><br><span class="line"><span class="meta">&#125; Stack_##T; \</span></span><br><span class="line"><span class="meta">void Stack_##T##_init(Stack_##T* stack, int capacity) &#123; \</span></span><br><span class="line"><span class="meta">    stack-&gt;array = (T*)malloc(sizeof(T) * capacity); \</span></span><br><span class="line"><span class="meta">    stack-&gt;capacity = capacity; \</span></span><br><span class="line"><span class="meta">    stack-&gt;top = -1; \</span></span><br><span class="line"><span class="meta">&#125; \</span></span><br><span class="line"><span class="meta"><span class="comment">//其他函数定义</span></span></span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p><strong>使用 <code>CREATE_STACK(int)</code> 和 <code>CREATE_STACK(double)</code></strong>：</p>
+<ul>
+<li>通过宏 <code>CREATE_STACK(int)</code> 创建了一个整型栈结构 <code>Stack_int</code>。</li>
+<li>通过宏 <code>CREATE_STACK(double)</code> 创建了一个双精度浮点型栈结构 <code>Stack_double</code>。</li>
+</ul>
+</li>
+</ol>
+<h4 id="总结：">总结：</h4>
+<p>这张PPT展示了如何使用宏定义创建不同类型的栈。尽管灵活，但宏定义的方式可能会降低代码可读性和调试性。</p>
+<hr>
+<h3 id="第二张PPT">第二张PPT</h3>
+<h4 id="内容：-2">内容：</h4>
+<p>第二张PPT是在第一张的基础上，继续使用宏定义方法扩展了栈的功能，包括 <code>push</code>、<code>pop</code> 和 <code>release</code> 等操作。</p>
+<ol>
+<li>
+<p><strong><code>push</code> 函数</strong>：检查栈是否已满，然后插入元素。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> Stack_##T##_push(Stack_##T* <span class="built_in">stack</span>, T data) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">stack</span>-&gt;top + <span class="number">1</span> &gt;= <span class="built_in">stack</span>-&gt;capacity) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Stack is full\n&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">stack</span>-&gt;<span class="built_in">array</span>[++<span class="built_in">stack</span>-&gt;top] = data;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p><strong><code>pop</code> 函数</strong>：检查栈是否为空，然后移除并返回栈顶元素。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">T Stack_##T##_pop(Stack_##T* <span class="built_in">stack</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">stack</span>-&gt;top &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Stack is empty\n&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">stack</span>-&gt;<span class="built_in">array</span>[<span class="built_in">stack</span>-&gt;top--];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="总结：-2">总结：</h4>
+<p>通过这些宏定义的栈操作函数，可以实现栈的入栈、出栈操作，且能适配多种类型。不过仍然存在调试困难的问题。</p>
+<hr>
+<h3 id="第三张PPT">第三张PPT</h3>
+<h4 id="内容：-3">内容：</h4>
+<p>第三张PPT改进了宏定义方式，使代码更具可读性。这里的C++版本不使用宏，而是直接用模板来实现通用栈的功能，具有更高的类型安全性和可读性。</p>
+<ol>
+<li>
+<p><strong>模板定义栈结构</strong>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Stack</span> &#123;</span><br><span class="line">    T* array;</span><br><span class="line">    <span class="type">int</span> capacity;</span><br><span class="line">    <span class="type">int</span> top;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p><strong>模板定义栈的操作函数</strong>：<br>
+使用 <code>template&lt;typename T&gt;</code> 创建通用函数，包括 <code>_init</code>、<code>_push</code> 和 <code>_pop</code> 等。</p>
+</li>
+</ol>
+<h4 id="总结：-3">总结：</h4>
+<p>相比宏定义，这种模板方式更具灵活性，且类型安全，可以在编译时检查类型是否正确。</p>
+<hr>
+<h3 id="第四张PPT：宏的缺点">第四张PPT：宏的缺点</h3>
+<p>这张PPT列出了使用宏的缺点：</p>
+<ol>
+<li><strong>代码可读性差</strong>：宏代码在展开后不易理解。</li>
+<li><strong>难调试</strong>：宏代码在编译器层面展开，不易定位错误。</li>
+<li><strong>显式类型参数</strong>：需要显式地传入类型。</li>
+<li><strong>手动实例化</strong>：每种类型都要手动实例化栈，缺乏自动泛型功能。</li>
+</ol>
+<p>这正是模板方法更适合C++泛型编程的原因。</p>
+<hr>
+<h3 id="第五张PPT：C-模板实现">第五张PPT：C++模板实现</h3>
+<p>这张PPT展示了如何通过C++模板来实现通用的栈结构，且避免了宏定义的缺点。</p>
+<ol>
+<li><strong>模板实现栈</strong>：使用 <code>template&lt;typename T&gt;</code>，使得栈可以容纳不同类型的数据。</li>
+<li><strong>操作函数</strong>：通过模板函数 <code>_push</code>、<code>_pop</code> 和 <code>_release</code> 实现栈操作。</li>
+</ol>
+<h4 id="总结：-4">总结：</h4>
+<p>使用模板实现通用栈，具有良好的类型安全性和复用性，是一种更优雅的泛型编程方式。</p>
+<hr>
+<h3 id="第六张PPT：概念与约束（C-20）">第六张PPT：概念与约束（C++20）</h3>
+<p>在C++20中，通过 <code>concept</code> 和 <code>requires</code> 语句进一步增强了模板的类型安全性。例如：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">concept</span> DataAvailable = !std::is_pointer&lt;T&gt;::value;</span><br></pre></td></tr></table></figure>
+<ol>
+<li><strong><code>concept</code> 关键字</strong>：定义了类型约束，确保传入的类型满足特定条件。</li>
+<li><strong><code>requires</code> 约束</strong>：用来限制模板类型，确保在编译时检测类型要求。</li>
+</ol>
+<h4 id="总结：-5">总结：</h4>
+<p>C++20的概念和约束提高了泛型编程的安全性，使得模板更加强大。</p>
+<hr>
+<p>以上是六张PPT的详细解释。每张PPT的内容都通过示例代码和讲解展示了从C宏到C++模板，再到C++20概念的演变。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Liu Kai-Qi</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/01/25/C7/">http://example.com/2025/01/25/C7/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">ChocStar🍫</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/C-%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/">C++高级程序设计</a></div><div class="post-share"><div class="social-share" data-image="/img/C++.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="prev-post pull-left" href="/2025/01/25/C++%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" title="C++高级程序设计笔记（C1-C4）"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/C++.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">C++高级程序设计笔记（C1-C4）</div></div></a><a class="next-post pull-right" href="/2025/01/25/C8/" title="C++高级程序设计笔记（C8）"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/C++.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">C++高级程序设计笔记（C8）</div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a href="/2025/01/25/C++%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" title="C++高级程序设计笔记（C1-C4）"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/C++.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="title">C++高级程序设计笔记（C1-C4）</div></div></a><a href="/2025/01/25/C8/" title="C++高级程序设计笔记（C8）"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/C++.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="title">C++高级程序设计笔记（C8）</div></div></a><a href="/2025/01/25/C5/" title="C++高级程序设计笔记（C5）"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/C++.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="title">C++高级程序设计笔记（C5）</div></div></a><a href="/2025/01/25/C6/" title="C++高级程序设计笔记（C6）"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/C++.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="title">C++高级程序设计笔记（C6）</div></div></a><a href="/2025/01/25/CPP-2-1/" title="C++高级程序设计笔记（C2-1）"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/C++.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="title">C++高级程序设计笔记（C2-1）</div></div></a><a href="/2025/01/25/CPP-2-4/" title="C++高级程序设计笔记（C2-4）"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/C++.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-25</div><div class="title">C++高级程序设计笔记（C2-4）</div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Liu Kai-Qi</div><div class="author-info-description">Sometimes you have to go for it</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/liukqchoco"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/liukqchoco" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">C7</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A8%8B%E5%BA%8F%E7%BB%84%E7%BB%87"><span class="toc-number">1.1.</span> <span class="toc-text">程序组织</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.1.1.</span> <span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#namespace"><span class="toc-number">1.2.</span> <span class="toc-text">namespace</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-2"><span class="toc-number">1.2.1.</span> <span class="toc-text">示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-3"><span class="toc-number">1.2.2.</span> <span class="toc-text">示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-4"><span class="toc-number">1.2.3.</span> <span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E9%A2%84%E5%A4%84%E7%90%86"><span class="toc-number">1.3.</span> <span class="toc-text">编译预处理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-5"><span class="toc-number">1.3.1.</span> <span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4"><span class="toc-number">1.4.</span> <span class="toc-text">预处理指令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-6"><span class="toc-number">1.4.1.</span> <span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%8F"><span class="toc-number">1.5.</span> <span class="toc-text">宏</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-7"><span class="toc-number">1.5.1.</span> <span class="toc-text">示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-8"><span class="toc-number">1.5.2.</span> <span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%9B%E5%9E%8B%E7%BC%96%E7%A8%8B%EF%BC%88template%EF%BC%89"><span class="toc-number">1.6.</span> <span class="toc-text">泛型编程（template）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-9"><span class="toc-number">1.6.1.</span> <span class="toc-text">示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-10"><span class="toc-number">1.6.2.</span> <span class="toc-text">示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E5%BC%A0PPT"><span class="toc-number">1.6.3.</span> <span class="toc-text">第一张PPT</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%85%E5%AE%B9%EF%BC%9A"><span class="toc-number">1.6.3.1.</span> <span class="toc-text">内容：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="toc-number">1.6.3.2.</span> <span class="toc-text">总结：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E5%BC%A0PPT"><span class="toc-number">1.6.4.</span> <span class="toc-text">第二张PPT</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%85%E5%AE%B9%EF%BC%9A-2"><span class="toc-number">1.6.4.1.</span> <span class="toc-text">内容：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A-2"><span class="toc-number">1.6.4.2.</span> <span class="toc-text">总结：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E5%BC%A0PPT"><span class="toc-number">1.6.5.</span> <span class="toc-text">第三张PPT</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%85%E5%AE%B9%EF%BC%9A-3"><span class="toc-number">1.6.5.1.</span> <span class="toc-text">内容：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A-3"><span class="toc-number">1.6.5.2.</span> <span class="toc-text">总结：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E5%BC%A0PPT%EF%BC%9A%E5%AE%8F%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="toc-number">1.6.6.</span> <span class="toc-text">第四张PPT：宏的缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E5%BC%A0PPT%EF%BC%9AC-%E6%A8%A1%E6%9D%BF%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.6.7.</span> <span class="toc-text">第五张PPT：C++模板实现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A-4"><span class="toc-number">1.6.7.1.</span> <span class="toc-text">总结：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E5%85%AD%E5%BC%A0PPT%EF%BC%9A%E6%A6%82%E5%BF%B5%E4%B8%8E%E7%BA%A6%E6%9D%9F%EF%BC%88C-20%EF%BC%89"><span class="toc-number">1.6.8.</span> <span class="toc-text">第六张PPT：概念与约束（C++20）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A-5"><span class="toc-number">1.6.8.1.</span> <span class="toc-text">总结：</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/01/25/C++%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" title="C++高级程序设计笔记（C1-C4）"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/C++.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++高级程序设计笔记（C1-C4）"/></a><div class="content"><a class="title" href="/2025/01/25/C++%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" title="C++高级程序设计笔记（C1-C4）">C++高级程序设计笔记（C1-C4）</a><time datetime="2025-01-25T14:10:32.000Z" title="发表于 2025-01-25 22:10:32">2025-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/01/25/C7/" title="C++高级程序设计笔记（C7）"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/C++.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++高级程序设计笔记（C7）"/></a><div class="content"><a class="title" href="/2025/01/25/C7/" title="C++高级程序设计笔记（C7）">C++高级程序设计笔记（C7）</a><time datetime="2025-01-25T14:10:32.000Z" title="发表于 2025-01-25 22:10:32">2025-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/01/25/C8/" title="C++高级程序设计笔记（C8）"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/C++.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++高级程序设计笔记（C8）"/></a><div class="content"><a class="title" href="/2025/01/25/C8/" title="C++高级程序设计笔记（C8）">C++高级程序设计笔记（C8）</a><time datetime="2025-01-25T14:10:32.000Z" title="发表于 2025-01-25 22:10:32">2025-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/01/25/C5/" title="C++高级程序设计笔记（C5）"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/C++.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++高级程序设计笔记（C5）"/></a><div class="content"><a class="title" href="/2025/01/25/C5/" title="C++高级程序设计笔记（C5）">C++高级程序设计笔记（C5）</a><time datetime="2025-01-25T14:10:32.000Z" title="发表于 2025-01-25 22:10:32">2025-01-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/01/25/C6/" title="C++高级程序设计笔记（C6）"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/C++.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++高级程序设计笔记（C6）"/></a><div class="content"><a class="title" href="/2025/01/25/C6/" title="C++高级程序设计笔记（C6）">C++高级程序设计笔记（C6）</a><time datetime="2025-01-25T14:10:32.000Z" title="发表于 2025-01-25 22:10:32">2025-01-25</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2025 By Liu Kai-Qi</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Welcome to my blog!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>(() => {
+  const panguFn = () => {
+    if (typeof pangu === 'object') pangu.autoSpacingPage()
+    else {
+      btf.getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+        .then(() => {
+          pangu.autoSpacingPage()
+        })
+    }
+  }
+
+  const panguInit = () => {
+    if (false){
+      GLOBAL_CONFIG_SITE.isPost && panguFn()
+    } else {
+      panguFn()
+    }
+  }
+
+  btf.addGlobalFn('pjaxComplete', panguInit, 'pangu')
+  document.addEventListener('DOMContentLoaded', panguInit)
+})()</script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css')
+    if (false) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="30" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="你要找什么呀" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
