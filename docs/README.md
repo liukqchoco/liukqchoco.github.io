@@ -6,6 +6,7 @@ These guides cover the `al-folio` v1.x starter and its pluginized runtime.
 
 - [Quick Start](QUICKSTART.md): create a site from the template and get it live quickly.
 - [Installing and Deploying](INSTALL.md): Docker, local setup, GitHub Pages, Netlify, and upgrade guidance.
+- [本地热更新预览](LOCAL_PREVIEW_CN.md): 中文日常工作流，先本地预览，再 commit 和 push。
 - [Customizing](CUSTOMIZE.md): content, CVs, publications, layouts, local overrides, and feature configuration.
 - [FAQ](FAQ.md): common deployment, upgrade, plugin, and troubleshooting questions.
 - [Troubleshooting](TROUBLESHOOTING.md): build, deployment, styling, and content debugging.

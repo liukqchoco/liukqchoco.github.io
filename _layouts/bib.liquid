@@ -1,0 +1,127 @@
+---
+---
+<div class="row">
+  {% if site.enable_publication_thumbnails %}
+    <div class="col col-sm-2 abbr">
+      {%- if entry.abbr -%}
+        {%- if site.data.venues[entry.abbr] -%}
+          {% assign venue_style = null %}
+          {% if site.data.venues[entry.abbr].color != blank %}
+            {% assign venue_style = site.data.venues[entry.abbr].color | prepend: 'style="background-color:' | append: '"' %}
+          {%- endif -%}
+          <abbr
+            class="badge rounded w-100"
+            {% if venue_style %}
+              {{ venue_style }}
+            {% endif -%}
+          >
+            {% if site.data.venues[entry.abbr].url %}
+              <a href="{{ site.data.venues[entry.abbr].url }}">{{ entry.abbr }}</a>
+            {% else %}
+              <div>{{- entry.abbr -}}</div>
+            {% endif %}
+          </abbr>
+        {% else %}
+          <abbr class="badge rounded w-100">{{ entry.abbr }}</abbr>
+        {% endif %}
+      {% endif %}
+      {% if entry.preview %}
+        {% if entry.preview contains '://' %}
+          <img class="preview z-depth-1 rounded" src="{{ entry.preview }}" alt="{{ entry.title }}">
+        {% else %}
+          {% assign entry_path = entry.preview | prepend: '/assets/img/publication_preview/' %}
+          {%
+            include figure.liquid
+            loading="eager"
+            path=entry_path
+            sizes = "200px"
+            class="preview z-depth-1 rounded"
+            zoomable=true
+            avoid_scaling=true
+            alt=entry.preview
+          %}
+        {% endif %}
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <div id="{{ entry.key }}" class="{% if site.enable_publication_thumbnails %}col-sm-8{% else %}col-sm-10{% endif %}">
+    <div class="title">{{ entry.title }}</div>
+
+    <div class="author">
+      {% assign author_array_size = entry.author_array | size %}
+      {%- for author in entry.author_array -%}
+        {% assign author_is_self = false %}
+        {%- assign author_last_name = author.last | regex_replace: '[*∗†‡§¶‖&^]', '' -%}
+        {%- assign author_last_html = author.last | regex_replace: '([*∗†‡§¶‖&^]+)', '<sup>\1</sup>' -%}
+        {% if site.scholar.last_name contains author_last_name %}
+          {% if site.scholar.first_name contains author.first %}
+            {% assign author_is_self = true %}
+          {% endif %}
+        {%- endif -%}
+
+        {%- if forloop.length > 1 -%}
+          {% if forloop.first == false -%}
+            {%- if forloop.length > 2 %}, {% elsif forloop.length == 2 %}  {% endif %}
+          {%- endif %}
+          {%- if forloop.last %}and {% endif -%}
+        {% endif %}
+
+        {%- if author_is_self -%}
+          <em>{{ author.first }} {{ author_last_html }}</em>
+        {%- else -%}
+          {{ author.first }} {{ author_last_html }}
+        {%- endif -%}
+      {% endfor %}
+    </div>
+
+    {% assign proceedings = 'inproceedings,incollection' | split: ',' %}
+    {% assign thesis = 'thesis,mastersthesis,phdthesis' | split: ',' %}
+    {% if entry.type == 'article' %}
+      {% capture entrytype %}<em>{{ entry.journal }}</em>{% endcapture %}
+    {% elsif proceedings contains entry.type %}
+      {% capture entrytype %}<em>{{ entry.booktitle }}</em>{% endcapture %}
+    {% elsif thesis contains entry.type %}
+      {% capture entrytype %}<em>{{ entry.school }}</em>{% endcapture %}
+    {% else %}
+      {% capture entrytype %}{% endcapture %}
+    {% endif %}
+    {% assign entryyear = '' %}
+    {% if entry.year %}
+      {% capture entryyear %}{{ " " }}{{ entry.year }}{% endcapture %}
+    {% endif %}
+    {% assign entrytype_text = entrytype | strip_html | strip %}
+    {% capture periodical %}{{ entrytype }}{% if entrytype_text != "" and entryyear != "" %}, {% endif %}{{ entryyear }}{% endcapture %}
+    <div class="periodical">{{ periodical | strip }}</div>
+
+    <div class="links publication-inline-links">
+      {% assign has_previous_link = false %}
+      {% if entry.website %}
+        <a href="{{ entry.website }}">Website</a>
+        {% assign has_previous_link = true %}
+      {% endif %}
+      {% if entry.paper %}
+        {% if has_previous_link %}<span class="publication-link-separator">/</span>{% endif %}
+        <a href="{{ entry.paper }}">Paper</a>
+        {% assign has_previous_link = true %}
+      {% elsif entry.pdf %}
+        {% if has_previous_link %}<span class="publication-link-separator">/</span>{% endif %}
+        {% if entry.pdf contains '://' %}
+          <a href="{{ entry.pdf }}">Paper</a>
+        {% else %}
+          <a href="{{ entry.pdf | prepend: '/assets/pdf/' | relative_url }}">Paper</a>
+        {% endif %}
+        {% assign has_previous_link = true %}
+      {% endif %}
+      {% if entry.data %}
+        {% if has_previous_link %}<span class="publication-link-separator">/</span>{% endif %}
+        <a href="{{ entry.data }}">Data</a>
+        {% assign has_previous_link = true %}
+      {% endif %}
+      {% if entry.code %}
+        {% if has_previous_link %}<span class="publication-link-separator">/</span>{% endif %}
+        <a href="{{ entry.code }}">Code</a>
+      {% endif %}
+    </div>
+  </div>
+</div>

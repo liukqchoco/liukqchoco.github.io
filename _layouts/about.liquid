@@ -1,0 +1,186 @@
+---
+layout: default
+---
+<div class="post">
+  <header class="post-header">
+    <h1 class="post-title">
+      {% if site.title == 'blank' %}
+        <span class="font-weight-bold">{{ site.first_name }}</span> {{ site.middle_name }}
+        {{ site.last_name }}
+      {% else %}
+        {{ site.title }}
+      {% endif %}
+    </h1>
+    <p class="desc">{{ page.subtitle }}</p>
+  </header>
+
+  <article>
+    {% if page.profile %}
+      <div class="profile float-{% if page.profile.align == 'left' %}left{% else %}right{% endif %}">
+        {% if page.profile.image %}
+          {% assign profile_image_path = page.profile.image | prepend: 'assets/img/' %}
+          {% if page.profile.image_circular %}
+            {% assign profile_image_class = 'img-fluid z-depth-1 rounded-circle' %}
+          {% else %}
+            {% assign profile_image_class = 'img-fluid z-depth-1
+      rounded' %}
+          {% endif %}
+          {% capture sizes %}(min-width: {{ site.max_width }}) {{ site.max_width | minus: 30 | times: 0.3}}px, (min-width: 576px)
+      30vw, 95vw"{% endcapture %}
+          {%
+            include figure.liquid loading="eager" path=profile_image_path class=profile_image_class sizes=sizes alt=page.profile.image
+            cache_bust=true
+          %}
+        {% endif %}
+        {% if page.profile.more_info %}
+          <div class="more-info">{{ page.profile.more_info }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="clearfix">{{ content }}</div>
+
+    <!-- News -->
+    {% if page.announcements and page.announcements.enabled %}
+      <h2 id="news">
+        <a href="{{ '/news/' | relative_url }}" style="color: inherit">News</a>
+      </h2>
+      {% include news.liquid limit=true %}
+    {% endif %}
+
+    <!-- Latest posts -->
+    {% if page.latest_posts and page.latest_posts.enabled %}
+      <h2 id="latest-posts">
+        <a href="{{ '/blog/' | relative_url }}" style="color: inherit">Latest Posts</a>
+      </h2>
+      {% include latest_posts.liquid %}
+    {% endif %}
+
+    <!-- Selected papers -->
+    {% if page.selected_papers %}
+      <h2 id="publications">
+        <a href="{{ '/publications/' | relative_url }}" style="color: inherit">Selected Publications</a>
+      </h2>
+      {% include selected_papers.liquid %}
+    {% endif %}
+
+    <h2 id="education">Education</h2>
+    <div class="education-list">
+      <div class="education-item">
+        <div class="education-logo">
+          <img class="pku-logo" src="{{ '/assets/img/pku.png' | relative_url }}" alt="Peking University logo">
+        </div>
+        <div class="education-content">
+          <div class="education-school">Peking University</div>
+          <div class="education-date">2026.09 - Present</div>
+          <div class="education-degree">Ph.D. Student</div>
+        </div>
+      </div>
+
+      <div class="education-item">
+        <div class="education-logo">
+          <img src="{{ '/assets/img/nju.jpg' | relative_url }}" alt="Nanjing University logo">
+        </div>
+        <div class="education-content">
+          <div class="education-school">Nanjing University</div>
+          <div class="education-date">2022.09 - 2026.06</div>
+          <div class="education-degree">B.E. in Software Engineering</div>
+          <div class="education-meta">
+            GPA: 4.79 / 5.0<br>
+            Comprehensive GPA Ranking: 1 / 216<br>
+            Outstanding Graduate
+          </div>
+        </div>
+      </div>
+    </div>
+    <h2 id="experience">Experience</h2>
+    <div class="experience-list">
+      <div class="experience-item">
+        <div class="experience-logo">
+          <img src="{{ '/assets/img/experience/klingAI.png' | relative_url }}" alt="KlingAI logo">
+        </div>
+        <div class="experience-content">
+          <div class="experience-date">2024.12 - Present</div>
+          <div class="experience-team">Kling Video Model Team, Kuaishou Technology</div>
+          <div class="experience-role">Research Intern</div>
+          <div class="experience-meta">
+            Research: Audio-Visual Generation, Controllable Video Generation, Unified Video Generation Models<br>
+            Advised by
+            <a href="https://maoyunyao.github.io/personal-homepage/">Yunyao Mao</a> and
+            <a href="https://xinntao.github.io/">Xintao Wang</a>.
+          </div>
+        </div>
+      </div>
+    </div>
+    <h2 id="awards">Honors &amp; Awards</h2>
+    <div class="achievement-list">
+      <div class="achievement-item">
+        <div class="achievement-date">2022</div>
+        <div class="achievement-content">Yang Yongman Scholarship (8,000 ¥)</div>
+      </div>
+      <div class="achievement-item">
+        <div class="achievement-date">2023</div>
+        <div class="achievement-content"><strong>National Scholarship</strong> (Top 0.2% nationwide, the highest honor for undergraduates in China, 8,000 ¥)</div>
+      </div>
+      <div class="achievement-item">
+        <div class="achievement-date">2024</div>
+        <div class="achievement-content">Best Project Award, Nanjing University NLP Summer School</div>
+      </div>
+      <div class="achievement-item">
+        <div class="achievement-date">2024</div>
+        <div class="achievement-content">Guo Xie Birong Scholarship Special Award (top 1 in major, 10,000 ¥)</div>
+      </div>
+      <div class="achievement-item">
+        <div class="achievement-date">2024, 2026</div>
+        <div class="achievement-content">Outstanding Student</div>
+      </div>
+      <div class="achievement-item">
+        <div class="achievement-date">2025</div>
+        <div class="achievement-content">Outstanding Student Model</div>
+      </div>
+      <div class="achievement-item">
+        <div class="achievement-date">2025</div>
+        <div class="achievement-content">BYD Scholarship (top 1 in major, 10,000 ¥)</div>
+      </div>
+      <div class="achievement-item">
+        <div class="achievement-date">2026</div>
+        <div class="achievement-content">Outstanding Graduate</div>
+      </div>
+    </div>
+    <h2 id="contest">Contest</h2>
+    <div class="achievement-list">
+      <div class="achievement-item">
+        <div class="achievement-date">2021</div>
+        <div class="achievement-content"><strong>Olympiad National Silver Medal 🥈</strong>, 35th Chinese Chemistry Olympiad</div>
+      </div>
+      <div class="achievement-item">
+        <div class="achievement-date">2022</div>
+        <div class="achievement-content">Swift iOS App Development Certification</div>
+      </div>
+      <div class="achievement-item">
+        <div class="achievement-date">2023</div>
+        <div class="achievement-content">Second Prize, 26th Nanjing University Basic Disciplines Forum</div>
+      </div>
+      <div class="achievement-item">
+        <div class="achievement-date">2024</div>
+        <div class="achievement-content"><strong>Finalist Award</strong> (Top 2% Worldwide), 2024 COMAP Mathematical Contest in Modeling / Interdisciplinary Contest in Modeling (MCM/ICM), USA</div>
+      </div>
+    </div>
+    <!-- Social -->
+    {% if page.social %}
+      <div class="social">
+        <div class="contact-icons">{% social_links %}</div>
+
+        <div class="contact-note">{{ site.contact_note }}</div>
+      </div>
+    {% endif %}
+
+    {% if site.newsletter and site.newsletter.enabled and site.footer_fixed %}
+      {% if site.plugins contains 'al_newsletter' %}
+        {% include plugins/al_newsletter_form_center_margin.liquid %}
+      {% else %}
+        {% include newsletter.liquid center=true %}
+      {% endif %}
+    {% endif %}
+  </article>
+</div>

@@ -7,3 +7,23 @@
 
 "Vision":
   color: "#009f36"
+
+"ICCV 2025":
+  url: https://openaccess.thecvf.com/ICCV2025
+  color: "#b509ac"
+
+"ICML 2025":
+  url: https://icml.cc/Conferences/2025
+  color: "#b509ac"
+
+"CVPR 2026":
+  url: https://cvpr.thecvf.com/
+  color: "#b509ac"
+
+"ECCV 2026":
+  url: https://eccv.ecva.net/
+  color: "#b509ac"
+
+"ACM MM 2026":
+  url: https://www.acmmm.org/
+  color: "#b509ac"
