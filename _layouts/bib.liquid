@@ -32,7 +32,7 @@
           {% assign entry_path = entry.preview | prepend: '/assets/img/publication_preview/' %}
           {%
             include figure.liquid
-            loading="eager"
+            loading="lazy"
             path=entry_path
             sizes = "200px"
             class="preview z-depth-1 rounded"
@@ -68,9 +68,13 @@
         {% endif %}
 
         {%- if author_is_self -%}
-          <em>{{ author.first }} {{ author_last_html }}</em>
+          <em>
+            {{- author.first }}
+            {{ author_last_html -}}
+          </em>
         {%- else -%}
-          {{ author.first }} {{ author_last_html }}
+          {{ author.first }}
+          {{ author_last_html }}
         {%- endif -%}
       {% endfor %}
     </div>
@@ -92,7 +96,18 @@
     {% endif %}
     {% assign entrytype_text = entrytype | strip_html | strip %}
     {% capture periodical %}{{ entrytype }}{% if entrytype_text != "" and entryyear != "" %}, {% endif %}{{ entryyear }}{% endcapture %}
-    <div class="periodical">{{ periodical | strip }}</div>
+    {% assign periodical_html = periodical
+      | strip
+      | replace: '(ACM MM)', '(<strong>ACM MM</strong>)'
+      | replace: '(ECCV)', '(<strong>ECCV</strong>)'
+      | replace: '(CVPR)', '(<strong>CVPR</strong>)'
+      | replace: '(ICCV)', '(<strong>ICCV</strong>)'
+      | replace: '(ICML)', '(<strong>ICML</strong>)'
+    %}
+    <div class="periodical">{{ periodical_html }}</div>
+    {% if entry.additional_info %}
+      <div class="publication-note">{{ entry.additional_info }}</div>
+    {% endif %}
 
     <div class="links publication-inline-links">
       {% assign has_previous_link = false %}
@@ -101,11 +116,15 @@
         {% assign has_previous_link = true %}
       {% endif %}
       {% if entry.paper %}
-        {% if has_previous_link %}<span class="publication-link-separator">/</span>{% endif %}
+        {% if has_previous_link -%}
+          <span class="publication-link-separator">/</span>
+        {%- endif %}
         <a href="{{ entry.paper }}">Paper</a>
         {% assign has_previous_link = true %}
       {% elsif entry.pdf %}
-        {% if has_previous_link %}<span class="publication-link-separator">/</span>{% endif %}
+        {% if has_previous_link -%}
+          <span class="publication-link-separator">/</span>
+        {%- endif %}
         {% if entry.pdf contains '://' %}
           <a href="{{ entry.pdf }}">Paper</a>
         {% else %}
@@ -114,12 +133,16 @@
         {% assign has_previous_link = true %}
       {% endif %}
       {% if entry.data %}
-        {% if has_previous_link %}<span class="publication-link-separator">/</span>{% endif %}
+        {% if has_previous_link -%}
+          <span class="publication-link-separator">/</span>
+        {%- endif %}
         <a href="{{ entry.data }}">Data</a>
         {% assign has_previous_link = true %}
       {% endif %}
       {% if entry.code %}
-        {% if has_previous_link %}<span class="publication-link-separator">/</span>{% endif %}
+        {% if has_previous_link -%}
+          <span class="publication-link-separator">/</span>
+        {%- endif %}
         <a href="{{ entry.code }}">Code</a>
       {% endif %}
     </div>

@@ -32,6 +32,11 @@ layout: default
             cache_bust=true
           %}
         {% endif %}
+        {% if site.data.socials.email %}
+          <div class="profile-email">
+            <span class="profile-email-pill"><i class="fa-regular fa-envelope"></i> {{ site.data.socials.email }}</span>
+          </div>
+        {% endif %}
         {% if page.profile.more_info %}
           <div class="more-info">{{ page.profile.more_info }}</div>
         {% endif %}
@@ -106,8 +111,7 @@ layout: default
           <div class="experience-meta">
             Research: Audio-Visual Generation, Controllable Video Generation, Unified Video Generation Models<br>
             Advised by
-            <a href="https://maoyunyao.github.io/personal-homepage/">Yunyao Mao</a> and
-            <a href="https://xinntao.github.io/">Xintao Wang</a>.
+            <a href="https://maoyunyao.github.io/personal-homepage/">Yunyao Mao</a> and <a href="https://xinntao.github.io/">Xintao Wang</a>.
           </div>
         </div>
       </div>
@@ -120,7 +124,9 @@ layout: default
       </div>
       <div class="achievement-item">
         <div class="achievement-date">2023</div>
-        <div class="achievement-content"><strong>National Scholarship</strong> (Top 0.2% nationwide, the highest honor for undergraduates in China, 8,000 ¥)</div>
+        <div class="achievement-content">
+          <strong>National Scholarship</strong> (Top 0.2% nationwide, the highest honor for undergraduates in China, 8,000 ¥)
+        </div>
       </div>
       <div class="achievement-item">
         <div class="achievement-date">2024</div>
@@ -163,7 +169,10 @@ layout: default
       </div>
       <div class="achievement-item">
         <div class="achievement-date">2024</div>
-        <div class="achievement-content"><strong>Finalist Award</strong> (Top 2% Worldwide), 2024 COMAP Mathematical Contest in Modeling / Interdisciplinary Contest in Modeling (MCM/ICM), USA</div>
+        <div class="achievement-content">
+          <strong>Finalist Award</strong> (Top 2% Worldwide), 2024 COMAP Mathematical Contest in Modeling / Interdisciplinary Contest in Modeling
+          (MCM/ICM), USA
+        </div>
       </div>
     </div>
     <!-- Social -->

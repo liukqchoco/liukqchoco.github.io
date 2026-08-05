@@ -62,7 +62,6 @@ PORT=5000 bash scripts/preview_site.sh conda
    ```
 
 2. 修改网站内容，例如：
-
    - 首页：`_pages/about.md`
    - 站点标题、姓名、描述：`_config.yml`
    - 社交链接：`_data/socials.yml`

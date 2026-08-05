@@ -2,7 +2,7 @@
 layout: about
 title: About
 permalink: /
-subtitle: 
+subtitle:
 
 profile:
   align: right
@@ -37,6 +37,31 @@ latest_posts:
     margin-bottom: 1rem;
   }
 
+  .profile-email {
+    margin-top: 0.95rem;
+    text-align: center;
+    font-size: 1.12rem;
+    line-height: 1;
+  }
+
+  .profile-email-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    padding: 0.55rem 1.05rem;
+    border: 1px solid var(--global-divider-color, rgba(0, 0, 0, 0.14));
+    border-radius: 999px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    color: var(--global-text-color);
+    user-select: text;
+  }
+
+  .profile-email i {
+    color: var(--global-theme-color);
+    font-size: 1.16rem;
+  }
+
   .news table {
     font-size: 1.06rem;
   }
@@ -48,6 +73,17 @@ latest_posts:
   .publications .author,
   .publications .periodical {
     font-size: 1.12rem;
+  }
+
+  .publications .publication-note {
+    display: inline-block;
+    padding: 0.12rem 0.45rem;
+    border-radius: 0.45rem;
+    background: rgba(181, 9, 172, 0.08);
+    color: var(--global-theme-color);
+    font-size: 1.02rem;
+    font-weight: 700;
+    margin-top: 0.25rem;
   }
 
   .publications ol.bibliography li {
