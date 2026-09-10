@@ -144,6 +144,20 @@
           <span class="publication-link-separator">/</span>
         {%- endif %}
         <a href="{{ entry.code }}">Code</a>
+        {% assign has_previous_link = true %}
+      {% endif %}
+      {% if entry.leaderboard %}
+        {% if has_previous_link -%}
+          <span class="publication-link-separator">/</span>
+        {%- endif %}
+        <a href="{{ entry.leaderboard }}">Leaderboard</a>
+        {% assign has_previous_link = true %}
+      {% endif %}
+      {% if entry.dataset %}
+        {% if has_previous_link -%}
+          <span class="publication-link-separator">/</span>
+        {%- endif %}
+        <a href="{{ entry.dataset }}">Dataset</a>
       {% endif %}
     </div>
   </div>

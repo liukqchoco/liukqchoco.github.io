@@ -317,7 +317,7 @@ Prior to this, I received my B.E. in Software Engineering from **[Nanjing Univer
 **Research Interests**
 
 - **Generative AI (AIGC):** Controllable Video Generation, Multi-Shot Video Generation, Audio-Visual Generation, and Multimodal Evaluation.
-- **World Models (WM):** Interactive World Models, Autoregressive Long Video Generation, Memory-Augmented Modeling.
+- **World Models (WM):** Interactive World Models, Autoregressive Long Video Generation.
 - **Unified Understanding and Generation Models (UMM):** Unified Image and Video Understanding and Generation, New Unified Video Generation Architectures.
 
 **Feel free to reach out! I’m always open to research collaborations and discussions! ✨**
